@@ -1,19 +1,19 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
-<!--
-    <record model="ir.ui.view" id="expanse.list">
-      <field name="name">expanse list</field>
-      <field name="model">expanse.expanse</field>
-      <field name="arch" type="xml">
-        <tree>
-          <field name="name"/>
-          <field name="value"/>
-          <field name="value2"/>
-        </tree>
-      </field>
-    </record>
--->
+    <!--
+        <record model="ir.ui.view" id="expanse.list">
+          <field name="name">expanse list</field>
+          <field name="model">expanse.expanse</field>
+          <field name="arch" type="xml">
+            <tree>
+              <field name="name"/>
+              <field name="value"/>
+              <field name="value2"/>
+            </tree>
+          </field>
+        </record>
+    -->
 
     <!-- actions opening views on models -->
 
@@ -22,23 +22,33 @@
       <field name="res_model">expanse.player</field>
       <field name="view_mode">tree,form</field>
     </record>
+    <record model="ir.actions.act_window" id="expanse.action_planet_window">
+      <field name="name">Expanse planets window</field>
+      <field name="res_model">expanse.planet</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="expanse.action_colony_window">
+      <field name="name">Expanse colonies window</field>
+      <field name="res_model">expanse.colony</field>
+      <field name="view_mode">tree,form</field>
+    </record>
 
 
     <!-- server action to the one above -->
-<!--
-    <record model="ir.actions.server" id="expanse.action_server">
-      <field name="name">expanse server</field>
-      <field name="model_id" ref="model_expanse_expanse"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": model._name,
-        }
-      </field>
-    </record>
--->
+    <!--
+        <record model="ir.actions.server" id="expanse.action_server">
+          <field name="name">expanse server</field>
+          <field name="model_id" ref="model_expanse_expanse"/>
+          <field name="state">code</field>
+          <field name="code">
+            action = {
+              "type": "ir.actions.act_window",
+              "view_mode": "tree,form",
+              "res_model": model._name,
+            }
+          </field>
+        </record>
+    -->
 
     <!-- Top menu item -->
 
@@ -52,7 +62,10 @@
 
     <menuitem name="Players" id="expanse.menu_player_list" parent="expanse.menu_game"
               action="expanse.action_player_window"/>
-
+    <menuitem name="Planets" id="expanse.menu_planet_list" parent="expanse.menu_game"
+              action="expanse.action_planet_window"/>
+    <menuitem name="Colonies" id="expanse.menu_colony_list" parent="expanse.menu_game"
+              action="expanse.action_colony_window"/>
 
   </data>
 </odoo>
