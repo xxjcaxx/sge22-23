@@ -1,0 +1,21 @@
+.o_kanban_view .o_kanban_record.o_kanban_record_has_image_fill .o_kanban_image_fill_left.o_kanban_image_full.negocity_img_kanban {
+    background-position: left;
+}
+
+.mini_vehicle{
+    width: 80px;
+}
+
+
+
+.o_kanban_view .o_kanban_record .o_kanban_image_fill_top{
+    position: relative; margin-right: 16px;  min-height: 200px; background-size: cover; background-position: top; background-repeat: no-repeat;
+}
+@media (min-width: 576px){.o_kanban_view .o_kanban_record .o_kanban_image_fill_top{margin-top: -8px; margin-bottom: 16px; margin-left: -8px; margin-right: -8px;}}
+
+.o_kanban_view .o_kanban_record.o_kanban_image_fill_top.o_kanban_image_full{background-size: contain;}
+
+.vehicles_images {
+overflow: auto;
+max-height: 150px;
+}

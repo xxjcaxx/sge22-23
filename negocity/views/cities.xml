@@ -1,0 +1,140 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="negocity.city_tree">
+            <field name="name">Negocity Tree</field>
+            <field name="model">negocity.city</field>
+            <field name="arch" type="xml">
+                <tree banner_route="/negocity/city_banner" decoration-danger="oil&lt;10">
+                    <field name="name" />
+                    <field name="energy" />
+                    <field name="oil" />
+                    <field name="food" />
+                    <field name="water" />
+                    <field name="despair" />
+                    <field name="radiation" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="negocity.city_form">
+            <field name="name">Negocity Tree</field>
+            <field name="model">negocity.city</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group string="Global">
+                                <field name="name" />
+                                <field name="despair" />
+                                <field name="radiation" />
+                            </group>
+                            <group string="Resources">
+                                <field name="energy" />
+                                <field name="oil" />
+                                <field name="food" />
+                                <field name="water" />
+                                <field name="junk" />
+                            </group>
+
+                        </group>
+                        <notebook>
+                            <page string="Survivors">
+                                <group>
+                                   
+                                    <field name="survivors">
+                                        <tree>
+                                            <field name="name" />
+                                            <field name="player" />
+                                            <field name="vehicles" widget="many2many_tags" />
+                                        </tree>
+                                    </field>
+                                    <separator string="Unemployed Survivors"></separator>
+                                    <field name="unemployed_survivors">
+                                        <tree>
+                                            <field name="name" />
+                                            <field name="player" />
+                                        </tree>
+                                    </field>
+                                </group>
+                                <button name="create_npc" type="object" string="Create NPC" class="oe_highlight" />
+                            </page>
+                            <page string="Players">
+
+                                <field name="players">
+                                    <tree>
+                                        <field name="avatar_icon" widget="image" />
+                                        <field name="name" />
+                                    </tree>
+
+                                </field>
+
+                            </page>
+                            <page string="Buildings">
+
+                                <field name="buildings">
+                                    <tree>
+                                        <field name="type" />
+                                        <field name="level" />
+                                        <field name="ruined" />
+                                        <field name="junk_progress" widget="progressbar" />
+                                        <field name="workers" widget="many2many_tags" />
+                                        <field name="progress" widget="progressbar" />
+                                        <button name="dismantle" type="object" string="Dismantle" class="oe_highlight" />
+                                        <button name="repair" type="object" string="Repair" class="oe_highlight" />
+
+                                    </tree>
+
+                                </field>
+
+                            </page>
+                            <page string="Connections">
+                                <group>
+                                    <field name="position_x" />
+                                    <field name="position_y" />
+                                </group>
+                                <separator string="Roads"/>
+                                    <field name="roads">
+
+                                    </field>
+                                 <separator string="Travels Coming"/>
+                                    <field name="travels_coming">
+                                        <tree>
+                                            <field name="origin"/>
+                                             <field name="date_departure"/>
+                                             <field name="date_end"/>
+                                             <field name="progress" widget="progressbar"/>
+                                             <field name="player"/>
+                                               <field name="vehicle"/>
+                                        </tree>
+                                    </field>
+                                 <separator string="Travels Going"/>
+                                     <field name="travels_going">
+                                        <tree>
+                                            <field name="destiny"/>
+                                             <field name="date_departure"/>
+                                             <field name="date_end"/>
+                                             <field name="progress" widget="progressbar"/>
+                                             <field name="player"/>
+                                               <field name="vehicle"/>
+                                        </tree>
+                                    </field>
+                            </page>
+                            <page string="Vehicles">
+                                
+                                 <separator string="Abandoned Vehicles"></separator>
+ <field name="abandoned_vehicles"/>
+ <separator string="All Vehicles"></separator>
+ <field name="all_vehicles"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

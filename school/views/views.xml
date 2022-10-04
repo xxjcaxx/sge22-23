@@ -27,6 +27,11 @@
       <field name="res_model">school.topic</field>
       <field name="view_mode">tree,form</field>
     </record>
+    <record model="ir.actions.act_window" id="school.action_course_window">
+      <field name="name">school courses window</field>
+      <field name="res_model">school.course</field>
+      <field name="view_mode">tree,form</field>
+    </record>
 
 
     <!-- server action to the one above -->
@@ -60,6 +65,7 @@
               action="school.action_student_window"/>
     <menuitem name="Topics" id="school.menu_school_topics" parent="school.menu_1"
               action="school.action_topic_window"/>
-
+    <menuitem name="Courses" id="school.menu_course_topics" parent="school.menu_1"
+              action="school.action_course_window"/>
   </data>
 </odoo>

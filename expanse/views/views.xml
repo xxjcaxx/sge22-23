@@ -1,0 +1,58 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="expanse.list">
+      <field name="name">expanse list</field>
+      <field name="model">expanse.expanse</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="expanse.action_player_window">
+      <field name="name">Expanse players window</field>
+      <field name="res_model">expanse.player</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="expanse.action_server">
+      <field name="name">expanse server</field>
+      <field name="model_id" ref="model_expanse_expanse"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+
+    <menuitem name="Expanse" id="expanse.menu_root"/>
+
+    <!-- menu categories -->
+
+    <menuitem name="Game" id="expanse.menu_game" parent="expanse.menu_root"/>
+
+    <!-- actions -->
+
+    <menuitem name="Players" id="expanse.menu_player_list" parent="expanse.menu_game"
+              action="expanse.action_player_window"/>
+
+
+  </data>
+</odoo>

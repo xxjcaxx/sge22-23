@@ -1,0 +1,141 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="negocity.cities_action_window">
+      <field name="name">Negocity Cities</field>
+      <field name="res_model">negocity.city</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="negocity.b_types_action_window">
+      <field name="name">Negocity Building types</field>
+      <field name="res_model">negocity.building_type</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="negocity.buildings_action_window">
+      <field name="name">Negocity Buildings</field>
+      <field name="res_model">negocity.building</field>
+      <field name="view_mode">tree,form,pivot</field>
+    </record>
+    <record model="ir.actions.act_window" id="negocity.survivors_action_window">
+      <field name="name">Negocity Survivors</field>
+      <field name="res_model">negocity.survivor</field>
+      <field name="view_mode">kanban,tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="negocity.vehicles_action_window">
+      <field name="name">Negocity Vehicles</field>
+      <field name="res_model">negocity.vehicle</field>
+      <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="negocity.players_action_window">
+      <field name="name">Negocity Players</field>
+      <field name="res_model">res.partner</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain"></field>
+      <field name="context">{'default_name': 'New Player','search_default_player_partner':1,'default_is_player':True}</field>
+      <field name="view_ids" eval="[
+      (5, 0, 0),
+      (0, 0, {'view_mode': 'tree', 'view_id': ref('negocity.player_tree')}),
+      (0, 0, {'view_mode': 'form', 'view_id': ref('negocity.player_form')})
+      ]" />
+    </record>
+
+
+     <record model="ir.actions.act_window" id="negocity.roads_action_window">
+      <field name="name">Negocity Roads</field>
+      <field name="res_model">negocity.road</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+        <record model="ir.actions.act_window" id="negocity.character_template_action_window">
+      <field name="name">Negocity Character Templates</field>
+      <field name="res_model">negocity.character_template</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="negocity.vehicle_template_action_window">
+      <field name="name">Negocity vehicle Templates</field>
+      <field name="res_model">negocity.vehicle_template</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="negocity.travel_action_window">
+      <field name="name">Negocity travel</field>
+      <field name="res_model">negocity.travel</field>
+      <field name="view_mode">tree,form,calendar</field>
+    </record>
+
+
+
+    <record model="ir.actions.act_window" id="negocity.events_action_window">
+      <field name="name">Negocity events</field>
+      <field name="res_model">negocity.event</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+     <record model="ir.actions.act_window" id="negocity.collision_action_window">
+      <field name="name">Negocity collision</field>
+      <field name="res_model">negocity.collision</field>
+      <field name="view_mode">tree,form</field>
+      <field name="context">{'search_default_future_collision': 1}</field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="negocity.player_progress_action_window">
+      <field name="name">Negocity player_progress</field>
+      <field name="res_model">negocity.player_progress</field>
+      <field name="view_mode">tree,form,graph</field>
+    </record>
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="negocity.action_server">
+      <field name="name">negocity server</field>
+      <field name="model_id" ref="model_negocity_negocity"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+
+    <menuitem name="Negocity" id="negocity.menu_root" />
+
+    <!-- menu categories -->
+
+    <menuitem name="Game" id="negocity.cities" parent="negocity.menu_root" />
+    <menuitem name="Game aux" id="negocity.aux" parent="negocity.menu_root" />
+    <menuitem name="Clients" id="negocity.clients" parent="negocity.menu_root" />
+
+
+    <!-- actions -->
+
+    <menuitem name="Cities" id="negocity.cities_list" parent="negocity.cities" action="negocity.cities_action_window" />
+    <menuitem name="Building Types" id="negocity.building_types_list" parent="negocity.cities" action="negocity.b_types_action_window" />
+    <menuitem name="Buildings" id="negocity.buildings_list" parent="negocity.cities" action="negocity.buildings_action_window" />
+    <menuitem name="Survivors" id="negocity.survivors_list" parent="negocity.cities" action="negocity.survivors_action_window" />
+    <menuitem name="Vehicles" id="negocity.vehicles_list" parent="negocity.cities" action="negocity.vehicles_action_window" />
+<menuitem name="Roads" id="negocity.roads_list" parent="negocity.cities" action="negocity.roads_action_window" />
+<menuitem name="Travels" id="negocity.travels_list" parent="negocity.cities" action="negocity.travel_action_window" />
+ <menuitem name="Collisions" id="negocity.collision_menu" parent="negocity.cities" action="negocity.collision_action_window" />
+
+    <menuitem name="Players" id="negocity.playerss_list" parent="negocity.clients" action="negocity.players_action_window" />
+    <menuitem name="Events" id="negocity.events_list" parent="negocity.clients" action="negocity.events_action_window" />
+  
+<menuitem name="Charater Templates" id="negocity.character_template_menu" parent="negocity.aux" action="negocity.character_template_action_window" />
+<menuitem name="Vehicle Templates" id="negocity.vehicle_template_menu" parent="negocity.aux" action="negocity.vehicle_template_action_window" />
+<menuitem name="Player Progress" id="negocity.player_progress_menu" parent="negocity.aux" action="negocity.player_progress_action_window" />
+  </data>
+</odoo>

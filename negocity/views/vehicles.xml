@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data >
+    
+        <record id="negocity.vehicles_form" model="ir.ui.view">
+            <field name="name">Negocity vehicles form</field>
+            <field name="model">negocity.vehicle</field>
+            <field name="arch" type="xml">
+                <form string="vehicle">
+                    <header>
+                        <button name="fill_gas_tank" type="object" string="Fill Gas Tank" class="oe_highlight" />
+                        <button name="donate_gas_tank" type="object" string="Donate Gas Tank" class="oe_highlight" />
+                        <button name="repair" type="object" string="Repair" class="oe_highlight" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+
+                                <h2> <field name="name" /></h2>
+                                <field name="img_computed" widget="image"/>
+                                <field name="img" widget="image" class="oe_edit_only"/>
+
+                            </group>
+                         <group>
+
+                            <field name="oil_consumption" />
+                            <field name="gas_tank" />
+                            <field name="gas_tank_level" />
+                            <field name="speed" />
+                            <field name="passengers" />
+                            <field name="damage" />
+                            <field name="resistence" />
+                            <field name="junk_level" />
+                            <field name="survivor" />
+                            <field name="city" />
+                            <field name="template" />
+                         </group>
+
+                           
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="negocity.vehicles_tree" model="ir.ui.view">
+            <field name="name">Negocity vehicles tree</field>
+            <field name="model">negocity.vehicle</field>
+            <field name="arch" type="xml">
+                <tree string="vehicle">
+                   
+                              <field name="name" />
+                                <field name="img_computed" widget="image"/>
+                               
+
+                        
+                            <field name="oil_consumption" />
+                            <field name="gas_tank" /> <field name="gas_tank_level" />
+                            <field name="speed" />
+                            <field name="passengers" />
+                            <field name="damage" />
+                            <field name="junk_level" />
+                            <field name="survivor" />
+                            <field name="city" />    <field name="resistence" />
+                       
+                 
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="negocity.vehicles_kanban" model="ir.ui.view">
+            <field name="name">Negocity vehicles kanban</field>
+            <field name="model">negocity.vehicle</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id" />
+                    <field name="name" />
+                    <field name="oil_consumption" />
+                    <field name="gas_tank" />
+                    <field name="gas_tank_level" />
+                    <field name="speed" />
+                    <field name="passengers"/>
+                    <field name="damage"/>
+                    <field name="resistence"/>
+                    <field name="survivor"/>
+                    <field name="city"/>
+                    <field name="junk_level"/>
+
+                    <templates>
+                        <t t-name="kanban-box">
+
+                            <div t-attf-class="oe_kanban_card  ">
+                                <div class="o_kanban_image_fill_top o_kanban_image_full d-none d-md-block negocity_img_kanban"
+                                     t-attf-style="background-image:url('#{kanban_image('negocity.vehicle', 'img_computed', record.id.value, placeholder)}')">
+                                </div>
+
+
+                                <div class=" d-flex">
+                              
+                                    <div class="oe_kanban_details d-flex flex-column">
+                                        <a type="open"><h4 class="o_kanban_record_title oe_partner_heading"><field name="name"/></h4></a>
+                                        <ul>
+                                            
+                                            <li>Passengers: <field name="passengers"/></li>
+                                            
+                                            <li>Survivor: <field name="survivor"/></li>
+                                            <li>City: <field name="city"/></li>
+                                            <li>Junk Level: <field name="junk_level"/></li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="oe_kanban_details d-flex flex-column">
+                                       
+                                        <ul>
+                                            <li>Oil Consumption: <field name="oil_consumption"/></li>
+                                            <li>Gas Tank: <field name="gas_tank"/></li>
+                                            <li>Gas Tank Level: <field name="gas_tank_level"/></li>
+                                            <li>Speed: <field name="speed"/></li>
+                                          
+                                            <li>Damage: <field name="damage"/></li>
+                                            <li>Resistence: <field name="resistence"/></li>
+                                          
+                                        </ul>
+                                    </div>
+                                </div>
+                                    <div class="oe_kanban_details d-flex">
+                                        <div class=" d-flex flex-column">
+                                            <button name="fill_gas_tank" type="object" string="fill" class="btn btn-primary" >Fill gas tank</button>
+                                            <button name="donate_gas_tank" type="object" string="donate" class="btn btn-primary" >Donate gas tank</button>
+                                           
+                                        </div>
+                                        <div class=" d-flex flex-column">
+                                           
+                                            <button name="repair" type="object" string="repair" class="btn btn-primary" >Repair</button>
+                                        </div>
+                                        
+                                    </div>
+                                
+                            </div>
+
+
+                        </t>
+                    </templates>
+
+                  
+                </kanban>
+            </field>
+        </record>
+        
+    
+
+        <record id="negocity.vehicles_templates_form" model="ir.ui.view">
+            <field name="name">Negocity vehicles form</field>
+            <field name="model">negocity.vehicle_template</field>
+            <field name="arch" type="xml">
+                <form string="vehicle">
+                    <sheet>
+                        <group>
+                            <group>
+
+                                <h2> <field name="name" /></h2>
+                                
+                                <field name="image" widget="image"/>
+
+                            </group>
+                         <group>
+
+                            <field name="oil_consumption" />
+                            <field name="gas_tank" />
+                            <field name="speed" />
+                            <field name="passengers" />
+                            <field name="damage" />    <field name="resistence" />
+                         </group>
+
+                           
+                        </group>
+                        <button name="get_random_vehicle" type="object" string="Random vehicle" class="oe_highlight" />
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="negocity.vehicles_templates_tree" model="ir.ui.view">
+            <field name="name">Negocity vehicles tree</field>
+            <field name="model">negocity.vehicle_template</field>
+            <field name="arch" type="xml">
+                <tree string="vehicle">
+                   
+                              <field name="name" />
+                                <field name="image" widget="image"/>
+                       
+                            <field name="oil_consumption" />
+                            <field name="gas_tank" />
+                            <field name="speed" />
+                            <field name="passengers" />
+                            <field name="damage" />
+                            <field name="resistence" />
+
+                            <field name="score" invisible="1"/>
+                            <field name="score_stored" />
+                 
+                </tree>
+            </field>
+        </record>
+        
+
+
+    </data>
+    
+
+</odoo>

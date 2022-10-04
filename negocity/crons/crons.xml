@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data >
+    
+        <record model="ir.cron" forcecreate="True" id="negocity.cron_building_update">
+            <field name="name">Negocity: Cron Building Update</field>
+            <field name="model_id" ref="model_negocity_building"/>
+            <field name="state">code</field>
+            <field name="code">model.update_building()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="activity_user_type">specific</field>
+            <field name="doall" eval="False" />
+        </record>
+
+            
+        <record model="ir.cron" forcecreate="True" id="negocity.cron_travel_update">
+            <field name="name">Negocity: Cron Travel Update</field>
+            <field name="model_id" ref="model_negocity_travel"/>
+            <field name="state">code</field>
+            <field name="code">model.update_travel()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="activity_user_type">specific</field>
+            <field name="doall" eval="False" />
+        </record>
+
+        <record model="ir.cron" forcecreate="True" id="negocity.cron_survivor_update">
+            <field name="name">Negocity: Cron Survivor Update</field>
+            <field name="model_id" ref="model_negocity_survivor"/>
+            <field name="state">code</field>
+            <field name="code">model.update_survivor()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">10</field>  <!--- Cada 10 minuts es un dia -->
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="activity_user_type">specific</field>
+            <field name="doall" eval="False" />
+        </record>
+
+
+            
+        <record model="ir.cron" forcecreate="True" id="negocity.cron_collision_update">
+            <field name="name">Negocity: Cron collision Update</field>
+            <field name="model_id" ref="model_negocity_collision"/>
+            <field name="state">code</field>
+            <field name="code">model.update_collisions()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="activity_user_type">specific</field>
+            <field name="doall" eval="False" />
+        </record>
+
+        <record model="ir.cron" forcecreate="True" id="negocity.cron_messages_clean">
+            <field name="name">Negocity: Cron clean messages</field>
+            <field name="model_id" ref="model_negocity_event"/>
+            <field name="state">code</field>
+            <field name="code">model.clean_messages()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">100</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="activity_user_type">specific</field>
+            <field name="doall" eval="False" />
+        </record>
+
+
+        <record model="ir.cron" forcecreate="True" id="negocity.cron_players_progress">
+            <field name="name">Negocity: Cron Players Progress</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.update_players_progress()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">10</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="activity_user_type">specific</field>
+            <field name="doall" eval="False" />
+        </record>
+    
+    </data>
+    
+
+</odoo>

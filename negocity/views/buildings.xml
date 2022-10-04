@@ -1,0 +1,166 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="negocity.building_type_tree">
+            <field name="name">Negocity Tree</field>
+            <field name="model">negocity.building_type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="image_small" widget="image"></field>
+                    <field name="name" />
+                    <field name="energy" />
+                    <field name="oil" />
+                    <field name="food" />
+                    <field name="water" />
+                    <field name="despair" />
+                    <field name="junk" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="negocity.building_type_form">
+            <field name="name">Negocity form</field>
+            <field name="model">negocity.building_type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="image" widget="image"></field>
+                            <field name="name" />
+                            <field name="energy" />
+                            <field name="oil" />
+                            <field name="food" />
+                            <field name="water" />
+                            <field name="despair" />
+                        </group>
+                    </sheet>
+                </form>
+
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="negocity.building_tree">
+            <field name="name">Negocity building tree</field>
+            <field name="model">negocity.building</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="type" />
+                    <field name="level" />
+                    <field name="ruined" />
+                    <field name="city" />
+
+                    <field name="junk_progress" widget="progressbar" />
+                    <field name="workers" widget="many2many_tags" />
+                    <field name="time" />
+                    <field name="progress" widget="progressbar" />
+                    <button name="dismantle" type="object" string="Dismantle" class="oe_highlight" />
+                </tree>
+            </field>
+        </record>
+
+
+
+
+
+        <record model="ir.ui.view" id="negocity.building_form">
+            <field name="name">Negocity building</field>
+            <field name="model">negocity.building</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                         <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <field name="image" widget="image" class="oe_avatar" />
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                            <group>
+
+                                <field name="type" />
+                                <field name="level" />
+                                <field name="ruined" />
+                                <field name="city" />
+                            </group>
+                        </div>
+                        <notebook>
+                            <page name="construction" string="Construction" states="unfinished,inprogress">
+                                <group>
+                                    <group string="Junk">
+                                        <field name="junk_contributed" />
+                                        <field name="junk_progress" widget="progressbar" />
+                                    </group>
+                                    <group string="Progress">
+                                        <field name="date_start" />
+                                        <field name="date_end" />
+                                        <field name="time" />
+                                        <field name="progress" widget="progressbar" />
+                                    </group>
+                                    <separator string="Workers"></separator>
+                                    <field name="workers" />
+                                    <separator string="Workers Available"></separator>
+                                    <field name="workers_available" />
+
+                                </group>
+                            </page>
+                            <page name="type" string="Type">
+
+                                <group>
+
+                                    <field name="name" />
+                                    <field name="energy" />
+                                    <field name="oil" />
+                                    <field name="food" />
+                                    <field name="water" />
+                                    <field name="despair" />
+                                     <field name="junk" />
+                                </group>
+
+                            </page>
+                        </notebook>
+
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="negocity.building_pivot">
+            <field name="name">Negocity building</field>
+            <field name="model">negocity.building</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="type" type="col" />
+                    
+                    <field name="city" type="row" />
+                   
+                  
+                </pivot>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="negocity.building_search">
+            <field name="name">Negocity building</field>
+            <field name="model">negocity.building</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="city"/>
+                    <field name="type"/>
+                   
+                    <filter name="finished" string="Finished" domain="[('state', '=', 'finished')]" />
+                    <filter name="finished" string="In production" domain="[('state', '=', 'finished'),('ruined','&lt;',100)]" />
+                    <filter name="type" string="Type" context="{'group_by': 'type'}" />
+                    <filter name="city" string="City" context="{'group_by': 'city'}" />
+                </search>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

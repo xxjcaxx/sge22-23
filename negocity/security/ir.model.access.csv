@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_negocity_city,negocity.city,model_negocity_city,base.group_user,1,1,1,1
+access_negocity_building_type,negocity.building_type,model_negocity_building_type,base.group_user,1,1,1,1
+access_negocity_building,negocity.building,model_negocity_building,base.group_user,1,1,1,1
+access_negocity_survivor,negocity.survivor,model_negocity_survivor,base.group_user,1,1,1,1
+access_negocity_vehicle,negocity.vehicle,model_negocity_vehicle,base.group_user,1,1,1,1
+access_negocity_road,negocity.road,model_negocity_road,base.group_user,1,1,1,1
+access_negocity_character_template,negocity.character_template,model_negocity_character_template,base.group_user,1,1,1,1
+access_negocity_vehicle_template,negocity.vehicle_template,model_negocity_vehicle_template,base.group_user,1,1,1,1
+access_negocity_travel,negocity.travel,model_negocity_travel,base.group_user,1,1,1,1
+access_negocity_event,negocity.event,model_negocity_event,base.group_user,1,1,1,1
+access_negocity_collision,negocity.collision,model_negocity_collision,base.group_user,1,1,1,1
+access_negocity_player_progress,negocity.player_progress,model_negocity_player_progress,base.group_user,1,1,1,1
+access_negocity_travel_wizard,negocity.travel_wizard,model_negocity_travel_wizard,base.group_user,1,1,1,1
+access_negocity_city_transient,negocity.city_transient,model_negocity_city_transient,base.group_user,1,1,1,1
+access_negocity_survivor_transient,negocity.survivor_transient,model_negocity_survivor_transient,base.group_user,1,1,1,1

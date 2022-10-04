@@ -1,0 +1,132 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="negocity.survivor_tree">
+            <field name="name">Negocity survivor tree</field>
+            <field name="model">negocity.survivor</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+
+                    <field name="desperation"/>
+                    <field name="mutations"/>
+                    <field name="illnes"/>
+                    <field name="city"/>
+                    <field name="player"/>
+                    <field name="vehicles" widget="many2many_tags"/>
+                    <field name="junk" />
+                    <button name="donate_junk" type="object" string="Donate Junk" class="oe_highlight" />
+
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="negocity.survivor_form">
+            <field name="name">Negocity survivor form</field>
+            <field name="model">negocity.survivor</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <h1><field name="name"/></h1>
+                        <field name="avatar" widget="image"/>
+                        <group>
+                            <field name="desperation"/>
+                            <field name="mutations"/>
+                            <field name="illnes"/>
+                            <field name="city" domain="[('radiation', '&lt;', 50)]"/>
+                            <field name="player"/>
+                            <field name="template"/>
+                            <field name="junk" />
+                            <button name="donate_junk" type="object" string="Donate Junk" class="oe_highlight" />
+                        </group>
+                        <notebook>
+                            <page name="vehicles" string="Vehicles">
+                                <field name="vehicles"/>
+                                <button name="assign_random_car" type="object" string="Assign Random Car" class="oe_highlight" />
+
+                            </page>
+                            <page name="building" string="Building">
+                                <field name="building"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="negocity.survivor_kanban">
+            <field name="name">Negocity survivor kanban</field>
+            <field name="model">negocity.survivor</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id" />
+                    <field name="name" />
+                    <field name="desperation" />
+                    <field name="mutations" />
+                    <field name="illnes" />
+                    <field name="city" />
+                    <field name="vehicles"/>
+                    <field name="player"/>
+                    <templates>
+                        <t t-name="kanban-box">
+
+                            <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+                                <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block negocity_img_kanban"
+                                     t-attf-style="background-image:url('#{kanban_image('negocity.survivor', 'avatar', record.id.value, placeholder)}')">
+                                </div>
+
+                              
+                                    <div class="oe_kanban_details d-flex flex-column">
+                                        <a type="open"><h4 class="o_kanban_record_title oe_partner_heading"><field name="name"/></h4></a>
+                                        <ul>
+                                            <li>Desperation: <field name="desperation"/></li>
+                                            <li>Mutations: <field name="mutations"/></li>
+                                            <li>Illnes: <field name="illnes"/></li>
+                                            <li>City: <field name="city"/></li>
+                                            <li>Player: <field name="player"/></li>
+                                            
+                                        </ul>
+                                    </div>
+                                    <div class="oe_kanban_details d-flex flex-column">
+                                        <h5>Vehicles:</h5>
+                                        <span t-foreach="record.vehicles.raw_value" t-as="i">
+                                            <img t-attf-class="mini_vehicle" t-att-src="kanban_image('negocity.vehicle', 'img_computed',i)" t-att-alt="i"/>
+                                        </span>
+                                        <button name="assign_random_car" type="object" string="Random Car" class="btn btn-primary" >Random Car</button>
+                                    </div>
+                                
+                            </div>
+
+
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="negocity.survivor_search">
+            <field name="name">Negocity survivor search</field>
+            <field name="model">negocity.survivor</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="desperation"/>
+                    <field name="mutations"/>
+                    <field name="illnes"/>
+                    <field name="city"/>
+                    <field name="player"/>
+                    <field name="player" string="Name or player"
+                           filter_domain="['|',('name','ilike',self),('player.name','ilike',self)]"/>
+                    <filter name="with_player" string="With Player" domain="[('player', '!=', False)]"/>
+                    <filter name="without_player" string="Without Player" domain="[('player', '=', False)]"/>
+                    <filter name="group_by_player" string="Player" context="{'group_by': 'player'}"/>
+                    <filter name="group_by_city" string="City" context="{'group_by': 'city'}"/>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>

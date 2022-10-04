@@ -1,0 +1,230 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="negocity.travel_tree">
+            <field name="name">negocity travel Tree</field>
+            <field name="model">negocity.travel</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="origin" />
+                    <field name="destiny" />
+                    <field name="road" />
+                    <field name="date_departure" />
+                    <field name="date_end" />
+                    <field name="progress" widget="progressbar"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="negocity.travel_form">
+            <field name="name">negocity travel Form</field>
+            <field name="model">negocity.travel</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+
+                                <field name="origin" />
+                                <field name="destiny" attrs="{'readonly': [('origin', '=', False)]}"/>
+                                <field name="road" />
+                                <field name="player"  attrs="{'readonly': [('origin', '=', False)]}"/>
+                                <field name="driver"  attrs="{'readonly': [('player', '=', False)]}" />
+                                <field name="vehicle"  attrs="{'readonly': [('driver', '=', False)]}" />
+                                <field name="oil_required" />
+                                <field name="oil_available" />
+                            </group>
+                            <group>
+                                <field name="date_departure" />
+                                <field name="time" />
+                                <field name="date_end" />
+                                <field name="progress" widget="progressbar"/>
+                            </group>
+
+                        </group>
+
+                        <notebook>
+                            <page name="passenger" string="Passengers">
+                                <field name="passengers" />
+                            </page>
+                            <page name="collisions" string="Collisions">
+                                <field name="collisions" />
+                            </page>
+                        </notebook>
+                        <button name="launch_travel" type="object" string="Launch travel" class="oe_highlight" />
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="negocity.travel_calendar">
+            <field name="name">negocity travel calendar</field>
+            <field name="model">negocity.travel</field>
+            <field name="arch" type="xml">
+                <calendar date_start="date_departure" date_stop="date_end" color="road">
+                    <field name="name" />
+                    <field name="origin" />
+                    <field name="destiny" />
+                    <field name="road" />
+                    <field name="progress" widget="progressbar"/>
+                </calendar>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="negocity.travel_wizard_action">
+            <field name="name">Lets create a travel</field>
+            <field name="res_model">negocity.travel_wizard</field>
+            <field name="binding_model_id" ref="model_negocity_travel"></field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+
+        </record>
+
+
+
+
+        <record model="ir.ui.view" id="negocity.travel_wizard_form">
+            <field name="name">negocity travel Form</field>
+            <field name="model">negocity.travel_wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="state" widget="statusbar"></field>
+                        <field name="ready" invisible="1"></field>
+                    </header>
+                    <sheet>
+                        <group states="origin">
+                            <field name="origin" />
+                            <field name="player"  attrs="{'readonly': [('origin', '=', False)]}"/>
+                        </group>
+                        <group states="destiny">
+                            <field name="cities_available">
+                                <tree>
+                                    <field name="city"/>
+                                    <button name="select" type="object" string="Select" class="oe_highlight" />
+                                </tree>
+                            </field>
+                            <field name="destiny"
+                                   domain = "[('id','in',context.get('cities_available_context',[]))]"
+                                   attrs="{'readonly': [('origin', '=', False)]}"/>
+                            <field name="road" readonly="1" />
+
+                        </group>
+                        <group states="driver">
+                            <group>
+                                <field name="driver"  attrs="{'readonly': [('player', '=', False)]}"  domain="[('player','=',player),('city','=',context.get('origin_context',[]))]" />
+                                <field name="vehicle"  attrs="{'readonly': [('driver', '=', False)]}"  domain="[('survivor','=',driver),('city','=',context.get('origin_context',[]))]" />
+
+                            </group>
+                            <group>
+                                <field name="oil_required" />
+                                <field name="not_oil" invisible="1" />
+                                <label colspan="2"
+                                       for="oil_available"
+                                       string="Not sufficient Oil"
+                                       attrs="{'invisible': [('not_oil','=', False)]}"
+                                       style="background-color:yellow;"/>
+                                <field name="oil_available" />
+                            </group>
+
+                        </group>
+                        <notebook states="driver">
+                            <page name="passenger" string="Passengers">
+                                <field name="passenger_available">
+                                    <kanban>
+                                        <field name="id" />
+                                        <field name="survivor" />
+
+                                        <templates>
+                                            <t t-name="kanban-box">
+
+                                                <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+                                                    <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block negocity_img_kanban"
+                                                         t-attf-style="background-image:url('#{kanban_image('negocity.survivor_transient', 'avatar', record.id.value, placeholder)}')">
+                                                    </div>
+
+
+                                                    <div class="oe_kanban_details d-flex flex-column">
+                                                        <a type="open"><h4 class="o_kanban_record_title oe_partner_heading"><field name="survivor"/></h4></a>
+                                                    </div>
+                                                    <button name="select"
+                                                            type="object" string="Select"
+                                                            class="btn btn-primary"
+                                                            context="{'travel_wizard_context': parent.id}"
+                                                    >Select</button>
+                                                </div>
+
+
+                                            </t>
+                                        </templates>
+                                    </kanban>
+
+                                </field>
+
+                                <field name="passengers" >
+                                    <tree>
+                                        <field name="name" />
+                                        <field name="illnes" />
+                                    </tree>
+                                </field>
+
+                            </page>
+                        </notebook>
+
+                        <group states="dates">
+
+                            <group>
+                                <separator string="Resume:"></separator>
+                                <field name="origin_resume" readonly="1"  />
+                                <field name="destiny_resume" readonly="1" />
+                                <field name="road_resume" readonly="1" />
+                                <field name="driver_resume" readonly="1" />
+                            </group>
+                            <group>
+                                <field name="vehicle_resume" readonly="1" />
+                                <field name="oil_required_resume" readonly="1"  />
+                                <field name="oil_available_resume" readonly="1"  />
+                                <field name="date_departure" readonly="1"/>
+                                <field name="time" readonly="1"/>
+                                <field name="date_end" readonly="1"/>
+                            </group>
+                            <field name="passengers_resume" readonly="1" >
+                                <tree>
+                                    <field name="name" />
+                                    <field name="illnes" />
+                                </tree>
+                            </field>
+
+
+
+
+
+                        </group>
+
+
+                        <!--   <button name="launch_travel" type="object" string="Launch travel" class="oe_highlight" />
+                          -->
+                        <footer>
+                            <button name="previous" type="object" string="Previous" class="oe_highlight" states="destiny,driver,dates" />
+                            <button name="next"
+
+                                    type="object" string="Next"
+                                    class="oe_highlight" states="origin,destiny,driver" />
+                            <button name="create_travel" type="object" string="Create Travel" class="oe_highlight" states="dates" />
+                        </footer>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

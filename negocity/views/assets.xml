@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<odoo> 
+    <template id="assets_backend_inherit" inherit_id="web.assets_backend"> 
+        <xpath expr="script[last()]" position="after"> 
+            <script src="/negocity/static/src/js/components.js"/> 
+        </xpath> 
+    </template> 
+</odoo>    
