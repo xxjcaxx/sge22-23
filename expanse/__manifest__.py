@@ -25,6 +25,8 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'views/players.xml',
+'views/buildings.xml',
         'views/views.xml',
         'views/templates.xml',
     ],

@@ -1,0 +1,67 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="expanse.building_tree">
+      <field name="name">expanse list</field>
+      <field name="model">expanse.building</field>
+      <field name="arch" type="xml">
+        <tree>
+
+          <field name="name"/>
+          <field name="image"/>
+          <field name="type"/>
+          <field name="level"/>
+          <field name="colony"/>
+          <field name="price_base"/>
+          <field name="water_production"/>
+          <field name="energy_consumption"/>
+          <field name="metal_production"/>
+          <field name="hydrogen_production"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="expanse.building_form">
+      <field name="name">expanse list</field>
+      <field name="model">expanse.building</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group>
+              <group>
+                <field name="name"/>
+                <field name="image"/>
+                <field name="type"/>
+                <field name="level"/>
+                <field name="colony"/>
+                <field name="price_base"/>
+              </group>
+              <group>
+                <field name="water_production"/>
+                <field name="energy_consumption"/>
+                <field name="metal_production"/>
+                <field name="hydrogen_production"/>
+
+              </group>
+
+
+
+            </group>
+            <notebook>
+              <page string="">
+                <group>
+
+                </group>
+              </page>
+            </notebook>
+
+
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+
+  </data>
+</odoo>
