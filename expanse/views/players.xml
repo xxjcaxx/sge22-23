@@ -30,7 +30,12 @@
               <page string="Colonies">
                 <group>
                   <field name="colonies_qty"/>
-                  <field name="colonies"/>
+                  <field name="colonies" mode="tree">
+                    <tree>
+                       <field name="name"/>
+                       <field name="planet"/>
+                    </tree>
+                  </field>
                 </group>
               </page>
             </notebook>

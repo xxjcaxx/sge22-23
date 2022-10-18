@@ -9,7 +9,7 @@ class player(models.Model):
     _name = 'expanse.player'
     _description = 'Players of the game'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, string="Player Name")
     password = fields.Char()
     avatar = fields.Image(max_width=200, max_height=200)
     avatar_tumb = fields.Image(related="avatar", max_width=50, max_height=50)
@@ -77,6 +77,12 @@ class building(models.Model):
     energy_consumption = fields.Float(related='type.energy_consumption')
     metal_production = fields.Float(related='type.metal_production')
     hydrogen_production = fields.Float(related='type.hydrogen_production')
+
+    @api.constrains('level')
+    def check_level(self):
+        for b in self:
+            if b.level > 10:
+                raise ValidationError("Level cant be more than 10")
 
 
 class building_type(models.Model):

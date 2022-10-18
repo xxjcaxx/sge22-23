@@ -6,8 +6,7 @@
       <field name="name">expanse list</field>
       <field name="model">expanse.building</field>
       <field name="arch" type="xml">
-        <tree>
-
+        <tree editable="top" decoration-info="water_production > 50">
           <field name="name"/>
           <field name="image"/>
           <field name="type"/>
@@ -29,17 +28,18 @@
         <form>
           <sheet>
             <group>
-              <group>
+              <group string="Basic data">
                 <field name="name"/>
                 <field name="image"/>
                 <field name="type"/>
+
                 <field name="level"/>
                 <field name="colony"/>
                 <field name="price_base"/>
               </group>
               <group>
                 <field name="water_production"/>
-                <field name="energy_consumption"/>
+                <field name="energy_consumption"  widget="progressbar"/>
                 <field name="metal_production"/>
                 <field name="hydrogen_production"/>
 
