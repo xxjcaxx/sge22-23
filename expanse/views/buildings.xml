@@ -6,7 +6,7 @@
       <field name="name">expanse list</field>
       <field name="model">expanse.building</field>
       <field name="arch" type="xml">
-        <tree editable="top" decoration-info="water_production > 50">
+        <tree  decoration-info="water_production > 50">
           <field name="name"/>
           <field name="image"/>
           <field name="type"/>
@@ -30,7 +30,7 @@
             <group>
               <group string="Basic data">
                 <field name="name"/>
-                <field name="image"/>
+                <field name="image" widget="image"/>
                 <field name="type"/>
 
                 <field name="level"/>
