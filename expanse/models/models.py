@@ -49,8 +49,8 @@ class colony(models.Model):
     _description = 'Colonies'
 
     name = fields.Char(required=True)
-    planet = fields.Many2one('expanse.planet')
-    player = fields.Many2one('expanse.player')
+    planet = fields.Many2one('expanse.planet',ondelete="cascade")
+    player = fields.Many2one('expanse.player',ondelete="cascade")
     player_avatar = fields.Image(related="player.avatar")
     creation_date = fields.Datetime(default=fields.Datetime.now)
     buildings = fields.One2many('expanse.building', 'colony')
@@ -69,14 +69,15 @@ class building(models.Model):
 
     name = fields.Char()
     image = fields.Image(related='type.image')
-    type = fields.Many2one('expanse.building_type')
+    type = fields.Many2one('expanse.building_type',ondelete="restrict")
     level = fields.Integer(default=1)
-    colony = fields.Many2one('expanse.colony')
+    colony = fields.Many2one('expanse.colony',ondelete="cascade")
     price_base = fields.Float(related='type.price_base')
     water_production = fields.Float(related='type.water_production')
-    energy_consumption = fields.Float(related='type.energy_consumption')
+    energy_production = fields.Float(related='type.energy_production')
     metal_production = fields.Float(related='type.metal_production')
     hydrogen_production = fields.Float(related='type.hydrogen_production')
+    food_production = fields.Float(related='type.food_production')
 
     @api.constrains('level')
     def check_level(self):
@@ -84,6 +85,9 @@ class building(models.Model):
             if b.level > 10:
                 raise ValidationError("Level cant be more than 10")
 
+    def produce(self):
+        for b in self:
+            print("Produce",b.food_production)
 
 class building_type(models.Model):
     _name = 'expanse.building_type'
@@ -93,6 +97,8 @@ class building_type(models.Model):
     image = fields.Image(max_width=200, max_height=200)
     price_base = fields.Float()
     water_production = fields.Float()
-    energy_consumption = fields.Float()
+    energy_production = fields.Float()
     metal_production = fields.Float()
     hydrogen_production = fields.Float()
+    food_production = fields.Float()
+

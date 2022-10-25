@@ -14,7 +14,7 @@
           <field name="colony"/>
           <field name="price_base"/>
           <field name="water_production"/>
-          <field name="energy_consumption"/>
+          <field name="energy_production"/>
           <field name="metal_production"/>
           <field name="hydrogen_production"/>
         </tree>
@@ -26,7 +26,11 @@
       <field name="model">expanse.building</field>
       <field name="arch" type="xml">
         <form>
+          <header>
+              <button name="produce" type="object" string="Produce" class="oe_highlight" />
+            </header>
           <sheet>
+
             <group>
               <group string="Basic data">
                 <field name="name"/>
@@ -38,10 +42,10 @@
                 <field name="price_base"/>
               </group>
               <group>
-                <field name="water_production"/>
-                <field name="energy_consumption"  widget="progressbar"/>
-                <field name="metal_production"/>
-                <field name="hydrogen_production"/>
+                <field name="water_production" attrs="{'invisible': [('water_production','==',0)]}"/>
+                <field name="energy_production"  attrs="{'invisible': [('energy_production','==',0)]}"/>
+                <field name="metal_production" attrs="{'invisible': [('metal_production','==',0)]}"/>
+                <field name="hydrogen_production" attrs="{'invisible': [('hydrogen_production','==',0)]}"/>
 
               </group>
 
