@@ -27,7 +27,7 @@
     <record model="ir.actions.act_window" id="expanse.action_building_window">
       <field name="name">Expanse Buildings</field>
       <field name="res_model">expanse.building</field>
-      <field name="view_mode">tree,form</field>
+      <field name="view_mode">kanban,tree,form</field>
     </record>
     <record model="ir.actions.act_window" id="expanse.action_building_type_window">
       <field name="name">Expanse building_type</field>
@@ -59,6 +59,27 @@
 
     <menuitem name="Building Types" id="expanse.menu_building_type_list" parent="expanse.menu_aux_models"
               action="expanse.action_building_type_window"/>
+
+
+<record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+    <field name="name">res.config.settings.view.form.</field>
+    <field name="model">res.config.settings</field>
+    <field name="priority" eval="25" />
+    <field name="inherit_id" ref="base.res_config_settings_view_form" />
+    <field name="arch" type="xml">
+<xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Expanse Settings" string="Expanse Settings" data-key="expanse_settings">
+                        <div id="players">
+                            <h2>Expanse</h2>
+            <button type="object" name="reset_universe" string="Reset Universe"  class="btn-primary"/>
+                        </div>
+
+                    </div>
+                </xpath>
+
+    </field>
+</record>
+
 
   </data>
 </odoo>

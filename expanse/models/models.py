@@ -5,6 +5,15 @@ import random
 from odoo.exceptions import ValidationError
 
 
+class config(models.TransientModel):
+    _inherit = 'res.config.settings'
+    players = fields.Char(string='players',
+                             config_parameter="expanse.players")
+
+
+    def reset_universe(self):
+        print("reset",self)
+
 class player(models.Model):
     _name = 'expanse.player'
     _description = 'Players of the game'
@@ -54,6 +63,7 @@ class colony(models.Model):
     player_avatar = fields.Image(related="player.avatar")
     creation_date = fields.Datetime(default=fields.Datetime.now)
     buildings = fields.One2many('expanse.building', 'colony')
+    hangar_level = fields.Integer(default = 0)
 
 
 class spaceship(models.Model):
