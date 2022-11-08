@@ -38,6 +38,14 @@
                   </field>
                 </group>
               </page>
+               <page string="Spaceships">
+                <group>
+
+                  <field name="spaceships" mode="tree">
+
+                  </field>
+                </group>
+              </page>
             </notebook>
 
 
@@ -46,17 +54,6 @@
       </field>
     </record>
 
-    <record model="ir.ui.view" id="expanse.planet_tree">
-      <field name="name">expanse list</field>
-      <field name="model">expanse.planet</field>
-      <field name="arch" type="xml">
-        <tree>
-          <field name="name"/>
-          <field name="size"/>
-          <field name="gravity"/>
-        </tree>
-      </field>
-    </record>
 
   </data>
 </odoo>

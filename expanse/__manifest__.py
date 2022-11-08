@@ -27,9 +27,12 @@
         'security/ir.model.access.csv',
         'views/players.xml',
 'views/buildings.xml',
+'views/planets.xml',
+'views/battles.xml',
         'views/views.xml',
         'views/templates.xml',
-        'demo/data.xml'
+        'demo/data.xml',
+'demo/templates.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

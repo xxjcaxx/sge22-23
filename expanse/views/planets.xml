@@ -1,0 +1,130 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="expanse.planet_tree">
+            <field name="name">expanse list</field>
+            <field name="model">expanse.planet</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="size"/>
+                    <field name="gravity"/>
+                    <field name="colonies" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="expanse.planet_form">
+            <field name="name">expanse list</field>
+            <field name="model">expanse.planet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="image" widget="image"/>
+                            <field name="name"/>
+                            <field name="size"/>
+                            <field name="gravity"/>
+                        </group>
+                        <notebook>
+                            <page string="Colonies">
+                                <group>
+                                    <field name="colonies" mode="tree">
+                                        <tree>
+                                            <field name="name"/>
+                                            <field name="player"/>
+                                            <field name="hangar_level"/>
+                                            <field name="buildings" widget="many2many_tags"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                        </notebook>
+
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="expanse.planet_kanban">
+            <field name="name">expanse kanban</field>
+            <field name="model">expanse.planet</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="image"/>
+
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+                                <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block"
+                                     t-attf-style="background-image:url('#{kanban_image('expanse.planet',
+                     'image', record.id.value, placeholder)}')">
+                                </div>
+
+                                <div class="oe_kanban_details d-flex flex-column">
+                                    <a type="open">
+                                        <h4 class="o_kanban_record_title oe_partner_heading"><field name="name"/></h4></a>
+                                    <ul>
+
+
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="expanse.colony_form">
+            <field name="name">expanse list</field>
+            <field name="model">expanse.colony</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+
+                            <field name="name"/>
+                            <field name="player"/>
+                            <field name="planet"/>
+
+                        </group>
+                        <notebook>
+                            <page string="Buildings">
+                                <group>
+                                    <field name="buildings" mode="tree">
+
+                                    </field>
+                                </group>
+                            </page>
+                            <page string="Spaceships">
+                                <group>
+                                    <field name="spaceships" mode="tree">
+                                        <tree>
+                                            <field name="name"/>
+                                            <field name="qty"/>
+                                        </tree>
+
+                                    </field>
+                                </group>
+                            </page>
+                        </notebook>
+
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

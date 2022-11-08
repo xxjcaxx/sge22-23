@@ -1,85 +1,100 @@
 <odoo>
-  <data>
+    <data>
 
 
-    <!-- actions opening views on models -->
+        <!-- actions opening views on models -->
 
-    <record model="ir.actions.act_window" id="expanse.action_player_window">
-      <field name="name">Expanse Players</field>
-      <field name="res_model">expanse.player</field>
-      <field name="view_mode">tree,form</field>
-    </record>
-    <record model="ir.actions.act_window" id="expanse.action_planet_window">
-      <field name="name">Expanse Planets</field>
-      <field name="res_model">expanse.planet</field>
-      <field name="view_mode">tree,form</field>
-    </record>
-    <record model="ir.actions.act_window" id="expanse.action_colony_window">
-      <field name="name">Expanse Colonies </field>
-      <field name="res_model">expanse.colony</field>
-      <field name="view_mode">tree,form</field>
-    </record>
-    <record model="ir.actions.act_window" id="expanse.action_spaceship_window">
-      <field name="name">Expanse Spaceships</field>
-      <field name="res_model">expanse.spaceship</field>
-      <field name="view_mode">tree,form</field>
-    </record>
-    <record model="ir.actions.act_window" id="expanse.action_building_window">
-      <field name="name">Expanse Buildings</field>
-      <field name="res_model">expanse.building</field>
-      <field name="view_mode">kanban,tree,form</field>
-    </record>
-    <record model="ir.actions.act_window" id="expanse.action_building_type_window">
-      <field name="name">Expanse building_type</field>
-      <field name="res_model">expanse.building_type</field>
-      <field name="view_mode">tree,form</field>
-    </record>
+        <record model="ir.actions.act_window" id="expanse.action_player_window">
+            <field name="name">Expanse Players</field>
+            <field name="res_model">expanse.player</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record model="ir.actions.act_window" id="expanse.action_planet_window">
+            <field name="name">Expanse Planets</field>
+            <field name="res_model">expanse.planet</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+        <record model="ir.actions.act_window" id="expanse.action_colony_window">
+            <field name="name">Expanse Colonies </field>
+            <field name="res_model">expanse.colony</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record model="ir.actions.act_window" id="expanse.action_spaceship_window">
+            <field name="name">Expanse Spaceships</field>
+            <field name="res_model">expanse.spaceship</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record model="ir.actions.act_window" id="expanse.action_building_window">
+            <field name="name">Expanse Buildings</field>
+            <field name="res_model">expanse.building</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+        <record model="ir.actions.act_window" id="expanse.action_building_type_window">
+            <field name="name">Expanse building_type</field>
+            <field name="res_model">expanse.building_type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
+          <record model="ir.actions.act_window" id="expanse.action_template_window">
+            <field name="name">Expanse template</field>
+            <field name="res_model">expanse.template</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    <record model="ir.actions.act_window" id="expanse.action_battle_window">
+            <field name="name">Expanse Battles</field>
+            <field name="res_model">expanse.battle</field>
+            <field name="view_mode">tree,form,calendar</field>
+        </record>
 
-    <!-- Top menu item -->
+        <!-- Top menu item -->
 
-    <menuitem name="Expanse" id="expanse.menu_root"/>
+        <menuitem name="Expanse" id="expanse.menu_root"/>
 
-    <!-- menu categories -->
+        <!-- menu categories -->
 
-    <menuitem name="Game" id="expanse.menu_game" parent="expanse.menu_root"/>
-    <menuitem name="Aux Models" id="expanse.menu_aux_models" parent="expanse.menu_root"/>
-    <!-- actions -->
+        <menuitem name="Game" id="expanse.menu_game" parent="expanse.menu_root"/>
+        <menuitem name="Aux Models" id="expanse.menu_aux_models" parent="expanse.menu_root"/>
+        <!-- actions -->
 
-    <menuitem name="Players" id="expanse.menu_player_list" parent="expanse.menu_game"
-              action="expanse.action_player_window"/>
-    <menuitem name="Planets" id="expanse.menu_planet_list" parent="expanse.menu_game"
-              action="expanse.action_planet_window"/>
-    <menuitem name="Colonies" id="expanse.menu_colony_list" parent="expanse.menu_game"
-              action="expanse.action_colony_window"/>
-    <menuitem name="Buildings" id="expanse.menu_building_list" parent="expanse.menu_game"
-              action="expanse.action_building_window"/>
-    <menuitem name="Spaceships" id="expanse.menu_spaceship_list" parent="expanse.menu_game"
-              action="expanse.action_spaceship_window"/>
+        <menuitem name="Players" id="expanse.menu_player_list" parent="expanse.menu_game"
+                  action="expanse.action_player_window"/>
+        <menuitem name="Planets" id="expanse.menu_planet_list" parent="expanse.menu_game"
+                  action="expanse.action_planet_window"/>
+        <menuitem name="Colonies" id="expanse.menu_colony_list" parent="expanse.menu_game"
+                  action="expanse.action_colony_window"/>
+        <menuitem name="Buildings" id="expanse.menu_building_list" parent="expanse.menu_game"
+                  action="expanse.action_building_window"/>
+        <menuitem name="Spaceships" id="expanse.menu_spaceship_list" parent="expanse.menu_game"
+                  action="expanse.action_spaceship_window"/>
 
-    <menuitem name="Building Types" id="expanse.menu_building_type_list" parent="expanse.menu_aux_models"
-              action="expanse.action_building_type_window"/>
+        <menuitem name="Building Types" id="expanse.menu_building_type_list" parent="expanse.menu_aux_models"
+                  action="expanse.action_building_type_window"/>
 
+         <menuitem name="Templates" id="expanse.menu_template_list" parent="expanse.menu_aux_models"
+                  action="expanse.action_template_window"/>
 
-<record id="res_config_settings_view_form_inherit" model="ir.ui.view">
-    <field name="name">res.config.settings.view.form.</field>
-    <field name="model">res.config.settings</field>
-    <field name="priority" eval="25" />
-    <field name="inherit_id" ref="base.res_config_settings_view_form" />
-    <field name="arch" type="xml">
-<xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Expanse Settings" string="Expanse Settings" data-key="expanse_settings">
+        <menuitem name="Battles" id="expanse.menu_battle_list" parent="expanse.menu_game"
+                  action="expanse.action_battle_window"/>
+
+        <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="25" />
+            <field name="inherit_id" ref="base.res_config_settings_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Expanse Settings" string="Expanse Settings" data-key="expanse">
                         <div id="players">
                             <h2>Expanse</h2>
-            <button type="object" name="reset_universe" string="Reset Universe"  class="btn-primary"/>
+                            <button type="object" name="reset_universe" string="Reset Universe"  class="btn-primary"/>
                         </div>
 
                     </div>
                 </xpath>
 
-    </field>
-</record>
+            </field>
+        </record>
 
 
-  </data>
+    </data>
 </odoo>

@@ -1,0 +1,39 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="expanse.battle_tree">
+      <field name="name">expanse list</field>
+      <field name="model">expanse.battle</field>
+      <field name="arch" type="xml">
+        <tree >
+          <field name="name"/>
+          <field name="date_start"/>
+          <field name="date_end"/>
+          <field name="player1"/>
+          <field name="player2"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="expanse.battle_calendar">
+      <field name="name">expanse list</field>
+      <field name="model">expanse.battle</field>
+      <field name="arch" type="xml">
+        <calendar string="Battle Calendar"
+                  date_start="date_start"
+                  date_stop="date_end"
+                  color = "player1"
+        >
+          <field name="name"/>
+
+          <field name="player1"/>
+          <field name="player2"/>
+        </calendar>
+      </field>
+    </record>
+
+
+
+  </data>
+</odoo>
