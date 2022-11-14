@@ -88,10 +88,15 @@ class colony(models.Model):
     planet = fields.Many2one('expanse.planet',ondelete="cascade")
     player = fields.Many2one('expanse.player',ondelete="cascade")
     player_avatar = fields.Image(related="player.avatar")
-    creation_date = fields.Datetime(default=fields.Datetime.now)
+
     buildings = fields.One2many('expanse.building', 'colony')
     hangar_level = fields.Integer(default = 0)
     spaceships = fields.One2many('expanse.colony_spaceship_rel','colony_id')
+    available_spaceships = fields.Many2many('expanse.spaceship',compute="_get_available_spaceships")
+
+    def _get_available_spaceships(self):
+        for c in self:
+            c.available_spaceships = self.env['expanse.spaceship'].search([('hangar_required','<=',c.hangar_level)])
 
 
 class spaceship(models.Model):
@@ -99,6 +104,20 @@ class spaceship(models.Model):
     _description = 'Spaceships'
 
     name = fields.Char()
+    image = fields.Image(max_width=200, max_height=200)
+    capacity = fields.Float()
+    armor = fields.Float()
+    damage = fields.Float()
+    hangar_required = fields.Integer()
+    time = fields.Float(compute = '_get_construction_time')
+
+    def _get_construction_time(self):
+        for s in self:
+            s.time = (s.capacity+ 3*s.damage+ 2*s.armor)/13000
+
+    def fabricate(self):
+        for s in self:
+            print('fabrica',self.env.context)
 
 class colony_spaceship_rel(models.Model):
     _name = 'expanse.colony_spaceship_rel'

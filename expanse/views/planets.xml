@@ -109,13 +109,57 @@
                             </page>
                             <page string="Spaceships">
                                 <group>
+                                    <field name="hangar_level"></field>
                                     <field name="spaceships" mode="tree">
                                         <tree>
                                             <field name="name"/>
+
                                             <field name="qty"/>
                                         </tree>
 
                                     </field>
+                                    <field name="available_spaceships" mode="kanban">
+                                        <kanban>
+                                            <field name="id"/>
+                                            <field name="image"/>
+                                            <field name="name"/>
+                                            <field name="capacity"/>
+                                            <field name="armor"/>
+                                            <field name="damage"/>
+
+                                            <templates>
+                                                <t t-name="kanban-box">
+                                                    <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+                                                        <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block"
+                                                             t-attf-style="background-image:url('#{kanban_image('expanse.spaceship',
+                     'image', record.id.value, placeholder)}')">
+                                                        </div>
+
+                                                        <div class="oe_kanban_details d-flex flex-column">
+                                                            <a type="open">
+                                                                <h4 class="o_kanban_record_title oe_partner_heading"><field name="name"/></h4></a>
+                                                            <ul>
+                                                                <li>Capacity: <field name="capacity"/></li>
+                                                                <li>Armor: <field name="armor"/></li> <li>Damage: <field name="damage"/></li>
+                                                            </ul>
+                                                        </div>
+                                                         <div class="oe_kanban_details d-flex flex-column">
+                                   <button name="fabricate"
+                                           type="object"
+                                           string="Fabricate"
+                                           class="btn btn-primary"
+                                           context="{'ctx_colony':parent.id}"
+                                   >Fabricate</button>
+                                </div>
+                                                    </div>
+
+
+                                                </t>
+                                            </templates>
+                                        </kanban>
+
+                                    </field>
+
                                 </group>
                             </page>
                         </notebook>

@@ -29,9 +29,11 @@
 'views/buildings.xml',
 'views/planets.xml',
 'views/battles.xml',
+'views/spaceships.xml',
         'views/views.xml',
         'views/templates.xml',
         'demo/data.xml',
+'demo/spaceships_data.xml',
 'demo/templates.xml',
     ],
     # only loaded in demonstration mode

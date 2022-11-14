@@ -22,7 +22,7 @@
         <record model="ir.actions.act_window" id="expanse.action_spaceship_window">
             <field name="name">Expanse Spaceships</field>
             <field name="res_model">expanse.spaceship</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">kanban,tree,form</field>
         </record>
         <record model="ir.actions.act_window" id="expanse.action_building_window">
             <field name="name">Expanse Buildings</field>
