@@ -9,6 +9,7 @@
         <tree>
           <field name="avatar_tumb" widget="image"/>
           <field name="name"/>
+           <field name="money"/>
           <field name="colonies_qty"/>
           <field name="colonies" widget="many2many_tags"/>
         </tree>
@@ -25,6 +26,7 @@
               <field name="avatar" widget="image"/>
               <field name="name"/>
               <field name="password" password="True"/>
+               <field name="money"/>
             </group>
             <notebook>
               <page string="Colonies">

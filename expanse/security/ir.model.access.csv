@@ -8,3 +8,4 @@ access_expanse_building_type,expanse.building_type,model_expanse_building_type,b
 access_expanse_template,expanse.template,model_expanse_template,base.group_user,1,1,1,1
 access_expanse_battle,expanse.battle,model_expanse_battle,base.group_user,1,1,1,1
 access_expanse_colony_spaceship_rel,expanse.colony_spaceship_rel,model_expanse_colony_spaceship_rel,base.group_user,1,1,1,1
+access_expanse_colony_spaceship_fabrication,expanse.colony_spaceship_fabrication,model_expanse_colony_spaceship_fabrication,base.group_user,1,1,1,1

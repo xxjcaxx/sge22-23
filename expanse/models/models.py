@@ -45,6 +45,7 @@ class player(models.Model):
     colonies = fields.One2many('expanse.colony', 'player')
     colonies_qty = fields.Integer(compute="get_colonies_qty")
     spaceships = fields.Many2many('expanse.colony_spaceship_rel',compute='_get_spaceships')
+    money = fields.Float()
 
     @api.depends('colonies')
     def get_colonies_qty(self):
@@ -87,16 +88,26 @@ class colony(models.Model):
     name = fields.Char(required=True)
     planet = fields.Many2one('expanse.planet',ondelete="cascade")
     player = fields.Many2one('expanse.player',ondelete="cascade")
-    player_avatar = fields.Image(related="player.avatar")
+    player_avatar = fields.Image(related="player.avatar", string="Player Avatar")
+    money = fields.Float(related="player.money")
 
     buildings = fields.One2many('expanse.building', 'colony')
     hangar_level = fields.Integer(default = 0)
     spaceships = fields.One2many('expanse.colony_spaceship_rel','colony_id')
     available_spaceships = fields.Many2many('expanse.spaceship',compute="_get_available_spaceships")
 
+    water = fields.Float()
+    energy = fields.Float()
+    metal = fields.Float()
+    hydrogen = fields.Float()
+    food = fields.Float()
+
     def _get_available_spaceships(self):
         for c in self:
             c.available_spaceships = self.env['expanse.spaceship'].search([('hangar_required','<=',c.hangar_level)])
+
+    def update_hangar(self):
+        print(self)
 
 
 class spaceship(models.Model):
@@ -117,7 +128,20 @@ class spaceship(models.Model):
 
     def fabricate(self):
         for s in self:
-            print('fabrica',self.env.context)
+            print('fabrica',self.env.context['ctx_colony'])
+            colony = self.env['expanse.colony'].browse(self.env.context['ctx_colony'])
+            colony_spaceship_rel = colony.spaceships.filtered(lambda c: c.spaceship_id.id == s.id)
+            if(len(colony_spaceship_rel) == 0): # no té encara cap nau d'aquest tipus
+                colony_spaceship_rel = self.env['expanse.colony_spaceship_rel'].create({
+                    "spaceship_id": s.id,
+                    "colony_id": colony.id,
+                    "qty" : 0
+                })
+            self.env['expanse.colony_spaceship_fabrication'].create({
+                "spaceship_id": colony_spaceship_rel.id,
+                "progress": 0
+            })
+
 
 class colony_spaceship_rel(models.Model):
     _name = 'expanse.colony_spaceship_rel'
@@ -127,6 +151,23 @@ class colony_spaceship_rel(models.Model):
     spaceship_id = fields.Many2one('expanse.spaceship')
     colony_id = fields.Many2one('expanse.colony')
     qty = fields.Integer()
+    fabrications = fields.One2many('expanse.colony_spaceship_fabrication','spaceship_id')
+    fabrications_queue = fields.Integer(compute="_get_fabrications_queue")
+    fabrications_progress = fields.Float(compute="_get_fabrications_queue")
+
+    def _get_fabrications_queue(self):
+        for c in self:
+            c.fabrications_queue = len(c.fabrications)
+            c.fabrications_progress = c.fabrications[0].progress
+
+class colony_spaceship_fabrication(models.Model):
+    _name = 'expanse.colony_spaceship_fabrication'
+    _description = 'Spaceship fabrication model'
+
+    name = fields.Char(related="spaceship_id.name")
+    spaceship_id = fields.Many2one('expanse.colony_spaceship_rel')
+    progress = fields.Float()
+
 
 
 class building(models.Model):
