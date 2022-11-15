@@ -44,7 +44,12 @@
                 <group>
 
                   <field name="spaceships" mode="tree">
-
+                       <tree>
+                                            <field name="name"/>
+                                            <field name="qty"/>
+                                            <field name="fabrications_queue"/>
+                                            <field name="fabrications_progress" widget="progressbar"/>
+                                        </tree>
                   </field>
                 </group>
               </page>

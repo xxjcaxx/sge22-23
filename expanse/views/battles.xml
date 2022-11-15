@@ -16,6 +16,58 @@
       </field>
     </record>
 
+
+    <record model="ir.ui.view" id="expanse.battle_form">
+      <field name="name">expanse form</field>
+      <field name="model">expanse.battle</field>
+      <field name="arch" type="xml">
+        <form >
+          <sheet><group>
+            <group>
+              <field name="name"/>
+              <field name="date_start"/>
+              <field name="date_end"/>
+            </group>
+            <group>
+              <field name="player1"/>
+              <field name="player2"/>
+              <field name="colony1"/>
+              <field name="colony2"/>
+            </group>
+          </group>
+            <notebook>
+              <page string="Spaceships">
+                <group>
+                  <field name="spaceship1_list">
+                    <tree>
+                      <field name="name"/>
+                      <field name="qty"/>
+                    </tree>
+                  </field>
+                  <field name="spaceship1_available">
+                    <tree>
+                      <field name="name"/>
+                      <field name="qty"/>
+                      <field name="fabrications"/>
+                      <field name="fabrications_queue"/>
+                      <button name="add_to_battle"
+                              type="object"
+                              string="Add"
+                              class="btn btn-primary"
+                              context="{'ctx_battle':parent.id}"
+                      >Fabricate</button>
+                    </tree>
+                  </field>
+                </group>
+              </page></notebook>
+
+          </sheet>
+
+
+        </form>
+      </field>
+    </record>
+
     <record model="ir.ui.view" id="expanse.battle_calendar">
       <field name="name">expanse list</field>
       <field name="model">expanse.battle</field>

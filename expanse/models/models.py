@@ -25,10 +25,11 @@ class config(models.TransientModel):
         self.env['expanse.planet'].search([]).unlink()
         images = self.env['expanse.template'].search([('type', '=', '2')]).mapped('image')
         for i in range(0,100): # Crear planetes
-            self.env['expanse.planet'].create({
+            self.env['expanse.planet'].create({   #ORM
                 "name": name_generator(),
                 "size": random.betavariate(1.5,1.1)*1000,
-                "image": random.choice(images)
+                "image": random.choice(images),
+                "coordinates": str(random.randint(0,10000))+","+str(random.randint(0,10000))+","+str(random.randint(0,10000))
             })
 
 
@@ -68,6 +69,7 @@ class planet(models.Model):
     size = fields.Float()
     gravity = fields.Float(compute='_get_gravity')
     colonies = fields.One2many('expanse.colony', 'planet')
+    coordinates = fields.Char()
 
     @api.constrains('size')
     def check_planet_size(self):
@@ -79,6 +81,13 @@ class planet(models.Model):
     def _get_gravity(self):
         for planet in self:
             planet.gravity = 1
+
+    def distance(self,other_planet):
+        c1 = list(map(lambda c: int(c),self.coordinates.split(',')))
+        c2 = list(map(lambda c: int(c), other_planet.coordinates.split(',')))
+        # d = ((x2 - x1)2 + (y2 - y1)2 + (z2 - z1)2)1/2
+        distance = ((c2[0]-c1[0])**2 + (c2[1]-c1[1])**2 + (c2[2]-c1[2])**2)**0.5
+        print(distance, c1, c2)
 
 
 class colony(models.Model):
@@ -102,12 +111,18 @@ class colony(models.Model):
     hydrogen = fields.Float()
     food = fields.Float()
 
-    def _get_available_spaceships(self):
+    @api.depends('hangar_level')
+    def _get_available_spaceships(self): #ORM
         for c in self:
             c.available_spaceships = self.env['expanse.spaceship'].search([('hangar_required','<=',c.hangar_level)])
 
-    def update_hangar(self):
-        print(self)
+    def update_hangar(self): #ORM
+        for c in self:
+            required_money = 10**c.hangar_level
+            available_money = c.player.money
+            if(required_money <= available_money):
+                c.hangar_level += 1
+                c.player.money = c.player.money - required_money
 
 
 class spaceship(models.Model):
@@ -126,7 +141,7 @@ class spaceship(models.Model):
         for s in self:
             s.time = (s.capacity+ 3*s.damage+ 2*s.armor)/13000
 
-    def fabricate(self):
+    def fabricate(self): #ORM
         for s in self:
             print('fabrica',self.env.context['ctx_colony'])
             colony = self.env['expanse.colony'].browse(self.env.context['ctx_colony'])
@@ -158,7 +173,14 @@ class colony_spaceship_rel(models.Model):
     def _get_fabrications_queue(self):
         for c in self:
             c.fabrications_queue = len(c.fabrications)
-            c.fabrications_progress = c.fabrications[0].progress
+            c.fabrications_progress = 0
+            if( c.fabrications_queue >= 1):
+                c.fabrications_progress = c.fabrications[0].progress
+
+
+    def add_to_battle(self): #ORM
+        for c in self:
+            print(c,self.env.context)
 
 class colony_spaceship_fabrication(models.Model):
     _name = 'expanse.colony_spaceship_fabrication'
@@ -166,7 +188,7 @@ class colony_spaceship_fabrication(models.Model):
 
     name = fields.Char(related="spaceship_id.name")
     spaceship_id = fields.Many2one('expanse.colony_spaceship_rel')
-    progress = fields.Float()
+    progress = fields.Float() #ORM CRON
 
 
 
@@ -192,9 +214,18 @@ class building(models.Model):
             if b.level > 10:
                 raise ValidationError("Level cant be more than 10")
 
-    def produce(self):
+    def produce(self): #ORM CRON
         for b in self:
-            print("Produce",b.food_production)
+            colony = b.colony
+            water = colony.water + b.water_production
+            metal = colony.metal + b.metal_production
+
+            colony.write({
+                "water": water,
+                "metal": metal
+            })
+
+
 
 class building_type(models.Model):
     _name = 'expanse.building_type'
@@ -216,12 +247,15 @@ class battle(models.Model):
 
     name = fields.Char()
     date_start = fields.Datetime()
-    date_end = fields.Datetime()
+    date_end = fields.Datetime()      # Calcul de dates
     player1 = fields.Many2one('expanse.player')
     player2 = fields.Many2one('expanse.player')
     colony1 = fields.Many2one('expanse.colony')
     colony2 = fields.Many2one('expanse.colony')
-    spaceship1_list = fields.Many2many('expanse.spaceship')
+    spaceship1_list = fields.One2many('expanse.battle_spaceship_rel','battle_id')
+    spaceship1_available = fields.Many2many('expanse.colony_spaceship_rel',compute='_get_spaceships_available')
+    total_power = fields.Float()   # ORM Mapped
+
 
     @api.onchange('player1')
     def onchange_player1(self):
@@ -233,7 +267,29 @@ class battle(models.Model):
             }
         }
 
+    @api.onchange('player2')
+    def onchange_player2(self):
+        return {
+            'domain': {
+                'colony2': [('id', 'in', self.player2.colonies.ids)],
+                'player1': [('id', '!=', self.player2.id)],
+            }
+        }
 
+    @api.depends('colony1')
+    def _get_spaceships_available(self):
+        for b in self:
+            b.spaceship1_available = b.colony1.spaceships.ids
+
+
+class battle_spaceship_rel(models.Model):
+    _name = 'expanse.battle_spaceship_rel'
+    _description = 'battle_spaceship_rel'
+
+    name = fields.Char(related="spaceship_id.name")
+    spaceship_id = fields.Many2one('expanse.spaceship')
+    battle_id = fields.Many2one('expanse.battle')
+    qty = fields.Integer()
 
 class template(models.Model):
     _name = 'expanse.template'

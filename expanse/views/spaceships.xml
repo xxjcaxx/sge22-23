@@ -101,5 +101,23 @@
         </record>
 
 
+
+
+
+            <record model="ir.ui.view" id="expanse.spaceship_rel_tree">
+            <field name="name">expanse spaceship list</field>
+            <field name="model">expanse.colony_spaceship_rel</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="qty"/>
+                    <field name="fabrications"/>
+                    <field name="fabrications_queue"/>
+                    <field name="fabrications_progress" widget="progressbar"/>
+                </tree>
+            </field>
+        </record>
+
+
     </data>
 </odoo>

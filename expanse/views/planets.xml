@@ -10,6 +10,7 @@
                     <field name="name"/>
                     <field name="size"/>
                     <field name="gravity"/>
+                    <field name="coordinates"/>
                     <field name="colonies" widget="many2many_tags"/>
                 </tree>
             </field>
@@ -26,6 +27,7 @@
                             <field name="name"/>
                             <field name="size"/>
                             <field name="gravity"/>
+                             <field name="coordinates"/>
                         </group>
                         <notebook>
                             <page string="Colonies">
