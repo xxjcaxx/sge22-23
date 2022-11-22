@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base','mail'],
 
     # always loaded
     'data': [
@@ -35,6 +35,7 @@
         'demo/data.xml',
 'demo/spaceships_data.xml',
 'demo/templates.xml',
+'views/cron.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

@@ -10,6 +10,9 @@
           <field name="name"/>
           <field name="date_start"/>
           <field name="date_end"/>
+          <field name="distance"/>
+          <field name="time"/>
+          <field name="progress" widget="progressbar"/>
           <field name="player1"/>
           <field name="player2"/>
         </tree>
@@ -22,11 +25,29 @@
       <field name="model">expanse.battle</field>
       <field name="arch" type="xml">
         <form >
+          <header>
+             <button name="launch_battle"
+                              type="object"
+                              string="Launch Battle"
+                              class="btn btn-primary"
+
+                      ></button>
+               <button name="back"
+                              type="object"
+                              string="Back"
+                              class="btn btn-primary"
+
+                      ></button>
+            <field name="state" widget="statusbar" />
+          </header>
           <sheet><group>
             <group>
               <field name="name"/>
               <field name="date_start"/>
               <field name="date_end"/>
+                 <field name="distance"/>
+          <field name="time"/>
+              <field name="progress" widget="progressbar"/>
             </group>
             <group>
               <field name="player1"/>
@@ -55,7 +76,7 @@
                               string="Add"
                               class="btn btn-primary"
                               context="{'ctx_battle':parent.id}"
-                      >Fabricate</button>
+                      ></button>
                     </tree>
                   </field>
                 </group>

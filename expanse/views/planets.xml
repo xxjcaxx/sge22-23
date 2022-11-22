@@ -87,6 +87,23 @@
         </record>
 
 
+        <record model="ir.ui.view" id="expanse.colony_tree">
+            <field name="name">expanse list</field>
+            <field name="model">expanse.colony</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="planet"/>
+                                <field name="money"/>
+                                <field name="water"/>
+                                <field name="energy"/>
+                                <field name="metal"/>
+                                <field name="hydrogen"/>
+                                <field name="food"/>
+                </tree>
+            </field>
+        </record>
+
 
         <record model="ir.ui.view" id="expanse.colony_form">
             <field name="name">expanse list</field>

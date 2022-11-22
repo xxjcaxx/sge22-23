@@ -11,6 +11,7 @@
                     <field name="capacity"/>
                     <field name="armor"/>
                     <field name="damage"/>
+                    <field name="speed"/>
                 </tree>
             </field>
         </record>
@@ -32,6 +33,7 @@
                                 <field name="damage"/>
                                 <field name="hangar_required"></field>
                                 <field name="time"></field>
+                                <field name="speed"/>
                             </group>
 
                         </group>

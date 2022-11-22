@@ -27,13 +27,14 @@
       <field name="arch" type="xml">
         <form>
           <header>
-            <button name="produce" type="object" string="Produce" class="oe_highlight" />
+            <button name="produce_building" type="object" string="Produce" class="oe_highlight" />
           </header>
           <sheet>
 
             <group>
               <group string="Basic data">
                 <field name="name"/>
+                 <field name="temporal"/>
                 <field name="image" widget="image"/>
                 <field name="type"/>
 
