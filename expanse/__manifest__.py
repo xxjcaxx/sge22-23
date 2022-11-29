@@ -28,6 +28,7 @@
         'views/players.xml',
 'views/buildings.xml',
 'views/planets.xml',
+'views/colonies.xml',
 'views/battles.xml',
 'views/spaceships.xml',
         'views/views.xml',

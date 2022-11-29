@@ -12,6 +12,7 @@
                     <field name="armor"/>
                     <field name="damage"/>
                     <field name="speed"/>
+                    <field name="metal_required"/>
                 </tree>
             </field>
         </record>
@@ -34,6 +35,7 @@
                                 <field name="hangar_required"></field>
                                 <field name="time"></field>
                                 <field name="speed"/>
+                                <field name="metal_required"/>
                             </group>
 
                         </group>

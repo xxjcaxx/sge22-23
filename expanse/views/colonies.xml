@@ -1,0 +1,202 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+
+
+        <record model="ir.ui.view" id="expanse.colony_tree">
+            <field name="name">expanse list</field>
+            <field name="model">expanse.colony</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="planet"/>
+                    <field name="money"/>
+                    <field name="water"/>
+                    <field name="energy"/>
+                    <field name="metal"/>
+                    <field name="hydrogen"/>
+                    <field name="food"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="expanse.colony_form">
+            <field name="name">expanse list</field>
+            <field name="model">expanse.colony</field>
+            <field name="arch" type="xml">
+                <form>
+
+                    <sheet>
+ <div class="oe_button_box" name="button_box">
+
+                                    <div class="oe_button_box">
+                                        <button type="object" class="oe_stat_button" icon="fa-fighter-jet" name="update_hangar">
+                                            <div class="o_form_field o_stat_info">
+                                                <span class="o_stat_value">
+                                                    <field name="required_money_hangar" string="Money"/>
+                                                </span>
+                                                <span class="o_stat_text">Update Hangar</span>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                        <h2><field name="name"/></h2>
+                        <group>
+
+                            <group>
+
+                                <field name="player_avatar" widget="image"/>
+                                <field name="player"/>
+                                <field name="planet"/>
+                                <field name="money"/>
+                            </group>
+
+                            <group>
+
+                                <field name="water"/>
+                                <field name="water_production"/>
+                                <field name="energy"/>
+                                <field name="energy_production"/>
+                                <field name="metal"/>
+                                <field name="metal_production"/>
+                                <field name="hydrogen"/>
+                                <field name="hydrogen_production"/>
+                                <field name="food"/>
+                                <field name="food_production"/>
+                            </group>
+
+                        </group>
+                        <notebook>
+                            <page string="Buildings">
+                                <group>
+                                    <field name="buildings" mode="tree">
+                                        <tree decoration-danger="stopped == True">
+                                             <field name="stopped" invisible="True" />
+                                            <field name="name"/>
+                                            <field name="level"/>
+                                             <button name="update_level"
+                                                                    type="object"
+                                                                    string="Update"
+                                                                    class="btn btn-primary"
+                                                            ></button>
+                                            <field name="water_production"/>
+                                            <field name="energy_production"/>
+                                            <field name="metal_production"/>
+                                            <field name="hydrogen_production"/>
+                                        </tree>
+                                    </field>
+                                    <field name="buildings_available" mode="kanban">
+                                        <kanban>
+                                            <field name="id"/>
+                                            <field name="image"/>
+                                            <field name="name"/>
+
+                                            <templates>
+                                                <t t-name="kanban-box">
+                                                    <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+                                                        <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block"
+                                                             t-attf-style="background-image:url('#{kanban_image('expanse.building_type',
+                     'image', record.id.value, placeholder)}')">
+                                                        </div>
+
+                                                        <div class="oe_kanban_details d-flex flex-column">
+                                                            <a type="open">
+                                                                <h4 class="o_kanban_record_title oe_partner_heading"><field name="name"/></h4></a>
+                                                            <ul>
+                                                                <li>Price Base: <field name="price_base"/></li>
+                                                                <li>Water: <field name="water_production"/></li>
+                                                                <li>Energy: <field name="energy_production"/></li>
+                                                                <li>Metal: <field name="metal_production"/></li>
+                                                                <li>Hydrogen: <field name="hydrogen_production"/></li>
+                                                                <li>Food: <field name="food_production"/></li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="oe_kanban_details d-flex flex-column">
+                                                            <button name="build"
+                                                                    type="object"
+                                                                    string="Build"
+                                                                    class="btn btn-primary"
+                                                                    context="{'ctx_colony':parent.id}"
+                                                            >Build</button>
+                                                        </div>
+                                                    </div>
+
+
+                                                </t>
+                                            </templates>
+                                        </kanban>
+                                    </field>
+                                </group>
+                            </page>
+                            <page string="Spaceships">
+
+
+                                <group>
+                                    <field name="hangar_level"/>
+                                </group>
+                                <group>
+                                    <field name="spaceships" mode="tree">
+                                        <tree>
+                                            <field name="name"/>
+                                            <field name="qty"/>
+                                            <field name="fabrications_queue"/>
+                                            <field name="fabrications_progress" widget="progressbar"/>
+                                        </tree>
+
+                                    </field>
+                                    <field name="available_spaceships" mode="kanban">
+                                        <kanban>
+                                            <field name="id"/>
+                                            <field name="image"/>
+                                            <field name="name"/>
+                                            <field name="capacity"/>
+                                            <field name="armor"/>
+                                            <field name="damage"/>
+
+                                            <templates>
+                                                <t t-name="kanban-box">
+                                                    <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+                                                        <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block"
+                                                             t-attf-style="background-image:url('#{kanban_image('expanse.spaceship',
+                     'image', record.id.value, placeholder)}')">
+                                                        </div>
+
+                                                        <div class="oe_kanban_details d-flex flex-column">
+                                                            <a type="open">
+                                                                <h4 class="o_kanban_record_title oe_partner_heading"><field name="name"/></h4></a>
+                                                            <ul>
+                                                                <li>Capacity: <field name="capacity"/></li>
+                                                                <li>Armor: <field name="armor"/></li> <li>Damage: <field name="damage"/></li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="oe_kanban_details d-flex flex-column">
+                                                            <button name="fabricate"
+                                                                    type="object"
+                                                                    string="Fabricate"
+                                                                    class="btn btn-primary"
+                                                                    context="{'ctx_colony':parent.id}"
+                                                            >Fabricate</button>
+                                                        </div>
+                                                    </div>
+
+
+                                                </t>
+                                            </templates>
+                                        </kanban>
+
+                                    </field>
+
+                                </group>
+                            </page>
+                        </notebook>
+
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

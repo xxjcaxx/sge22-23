@@ -6,9 +6,10 @@
       <field name="name">expanse list</field>
       <field name="model">expanse.building</field>
       <field name="arch" type="xml">
-        <tree  decoration-info="water_production > 50">
+        <tree  decoration-danger="stopped == False">
+          <field name="stopped" invisible="True"/>
           <field name="name"/>
-          <field name="image"/>
+
           <field name="type"/>
           <field name="level"/>
           <field name="colony"/>
@@ -27,7 +28,7 @@
       <field name="arch" type="xml">
         <form>
           <header>
-            <button name="produce_building" type="object" string="Produce" class="oe_highlight" />
+
           </header>
           <sheet>
 
@@ -124,8 +125,7 @@
           <field name="energy_production"/>
           <field name="metal_production"/>
           <field name="hydrogen_production"/>
-          <filter name="water_productors" string="Water productors" domain="[('water_production', '>', 0)]"/>
-          <filter name="energy_productors" string="Energy productors" domain="[('energy_production', '>', 0)]"/>
+
           <filter name="group_by_colony" string="Group by Colony" context="{'group_by': 'colony'}"/>
         </search>
       </field>

@@ -104,7 +104,9 @@ class colony(models.Model):
     money = fields.Float(related="player.money")
 
     buildings = fields.One2many('expanse.building', 'colony')
+    buildings_available = fields.Many2many('expanse.building_type', compute='_get_available_buildings')
     hangar_level = fields.Integer(default=0)
+    required_money_hangar = fields.Float(compute='_get_required_money_hangar')
     spaceships = fields.One2many('expanse.colony_spaceship_rel', 'colony_id')
     available_spaceships = fields.Many2many('expanse.spaceship', compute="_get_available_spaceships")
 
@@ -114,6 +116,20 @@ class colony(models.Model):
     hydrogen = fields.Float()
     food = fields.Float()
 
+    water_production = fields.Float(compute='_get_total_productions')
+    energy_production = fields.Float(compute='_get_total_productions')
+    metal_production = fields.Float(compute='_get_total_productions')
+    hydrogen_production = fields.Float(compute='_get_total_productions')
+    food_production = fields.Float(compute='_get_total_productions')
+
+    def _get_required_money_hangar(self):
+        for c in self:
+            c.required_money_hangar = 10 ** c.hangar_level
+
+    def _get_available_buildings(self):
+        for c in self:
+            c.buildings_available = self.env['expanse.building_type'].search([('price_base','<=',c.money)])
+
     @api.depends('hangar_level')
     def _get_available_spaceships(self):  # ORM
         for c in self:
@@ -121,11 +137,40 @@ class colony(models.Model):
 
     def update_hangar(self):  # ORM
         for c in self:
-            required_money = 10 ** c.hangar_level
+            required_money = c.required_money_hangar  # Smartbutton
             available_money = c.player.money
             if (required_money <= available_money):
                 c.hangar_level += 1
                 c.player.money = c.player.money - required_money
+
+    @api.depends('buildings')
+    def _get_total_productions(self):
+        for c in self:
+            c.water_production =  sum(c.buildings.mapped('water_production'))
+            c.metal_production = sum(c.buildings.mapped('metal_production'))
+            c.hydrogen_production =  sum(c.buildings.mapped('hydrogen_production'))
+            c.food_production =  sum(c.buildings.mapped('food_production'))
+            c.energy_production =  sum(c.buildings.mapped('energy_production'))
+
+    @api.model
+    def produce(self):  # ORM CRON
+        self.search([]).produce_colony()
+
+    def produce_colony(self):
+        for colony in self:
+            water = colony.water + colony.water_production
+            metal = colony.metal + colony.metal_production
+            hydrogen = colony.hydrogen + colony.hydrogen_production
+            food = colony.food + colony.food_production
+            energy = colony.energy_production
+
+            colony.write({
+                "water": water,
+                "metal": metal,
+                "hydrogen": hydrogen,
+                "food": food,
+                "energy": energy
+            })
 
 
 class spaceship(models.Model):
@@ -140,11 +185,13 @@ class spaceship(models.Model):
     hangar_required = fields.Integer()
     time = fields.Float(compute='_get_construction_time')
     speed = fields.Float(compute='_get_construction_time')
+    metal_required = fields.Float(compute='_get_construction_time')
 
     def _get_construction_time(self):
         for s in self:
             s.time = (s.capacity + 3 * s.damage + 2 * s.armor) / 13000
             s.speed = 100000000 / (9 * s.capacity + 15 * s.armor + 5 * s.damage)
+            s.metal_required = s.capacity + 2 * s.armor + 0.5 * s.damage
 
     def fabricate(self):  # ORM
         for s in self:
@@ -159,7 +206,7 @@ class spaceship(models.Model):
                 })
             self.env['expanse.colony_spaceship_fabrication'].create({
                 "spaceship_id": colony_spaceship_rel.id,
-                "progress": 0
+                "time_remaining": s.time
             })
 
 
@@ -206,23 +253,40 @@ class colony_spaceship_fabrication(models.Model):
     name = fields.Char(related="spaceship_id.name")
     spaceship_id = fields.Many2one('expanse.colony_spaceship_rel')
     progress = fields.Float()  # ORM CRON
+    time_remaining = fields.Float()
 
+    @api.model
+    def update_fabrication(self):
+        for s in self.env['expanse.colony_spaceship_rel'].search([]).filtered(lambda rel: len(rel.fabrications) > 0):
+                print(s.fabrications)
+                spaceship_in_queue = s.fabrications[0]
+                time = spaceship_in_queue.time_remaining - 1
+                progress = 100 - 100*(time / s.spaceship_id.time)
+                if time <= 0:
+                    s.qty += 1
+                    #print("Deleted",spaceship_in_queue)
+                    spaceship_in_queue.unlink()
+
+                else:
+                    spaceship_in_queue.write({"time_remaining": time, "progress": progress})
+                    print("Updated", spaceship_in_queue)
 
 class building(models.Model):
     _name = 'expanse.building'
     _description = 'Buildings'
 
-    name = fields.Char()
+    name = fields.Char(related='type.name')
     image = fields.Image(related='type.image')
     type = fields.Many2one('expanse.building_type', ondelete="restrict")
     level = fields.Integer(default=1)
     colony = fields.Many2one('expanse.colony', ondelete="cascade")
     price_base = fields.Float(related='type.price_base')
-    water_production = fields.Float(related='type.water_production')
-    energy_production = fields.Float(related='type.energy_production')
-    metal_production = fields.Float(related='type.metal_production')
-    hydrogen_production = fields.Float(related='type.hydrogen_production')
-    food_production = fields.Float(related='type.food_production')
+    water_production = fields.Float(compute='_get_productions')
+    energy_production = fields.Float(compute='_get_productions')
+    metal_production = fields.Float(compute='_get_productions')
+    hydrogen_production = fields.Float(compute='_get_productions')
+    food_production = fields.Float(compute='_get_productions')
+    stopped = fields.Boolean(compute='_get_productions')
     temporal = fields.Integer()
 
     @api.constrains('level')
@@ -231,21 +295,46 @@ class building(models.Model):
             if b.level > 10:
                 raise ValidationError("Level cant be more than 10")
 
-    @api.model
-    def produce(self):  # ORM CRON
-        self.search([]).produce()
-
-    def produce_building(self):
+    def _get_productions(self):
         for b in self:
-            colony = b.colony
-            water = colony.water + b.water_production
-            metal = colony.metal + b.metal_production
+            level = b.level
+            # Expected productions
+            water_production = b.type.water_production * level
+            metal_production = b.type.metal_production * level
+            hydrogen_production = b.type.hydrogen_production * level
+            food_production = b.type.food_production * level
+            energy = b.type.energy_production * level
 
-            colony.write({
-                "water": water,
-                "metal": metal
-            })
+            if water_production + b.colony.water >= 0 and metal_production + b.colony.metal >= 0 and hydrogen_production + b.colony.hydrogen >= 0 and food_production + b.colony.food >= 0 and energy + b.colony.energy >= 0:
+                b.water_production = water_production
+                b.metal_production = metal_production
+                b.hydrogen_production = hydrogen_production
+                b.food_production = food_production
+                b.energy_production = energy
+                b.stopped = False
+            else:
+                b.water_production = 0
+                b.metal_production = 0
+                b.hydrogen_production = 0
+                b.food_production = 0
+                b.energy_production = 0
+                b.stopped = True
 
+    def update_level(self):
+        for b in self:
+            if b.colony.money >= (b.price_base ** b.level):
+                b.level += 1
+                b.colony.player.money -= (b.price_base ** b.level)
+            else:
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'message': 'You need '+str(b.price_base ** b.level)+' money',
+                        'type': 'danger',  # types: success,warning,danger,info
+                        'sticky': False
+                    }
+                }
 
 class building_type(models.Model):
     _name = 'expanse.building_type'
@@ -260,13 +349,23 @@ class building_type(models.Model):
     hydrogen_production = fields.Float()
     food_production = fields.Float()
 
+    def build(self):  # ORM
+        for b in self:
+            colony_id = self.env['expanse.colony'].browse(self.env.context['ctx_colony'])[0]
+            if colony_id.money >= b.price_base:
+                self.env['expanse.building'].create({
+                    "colony": colony_id.id,
+                    "type": b.id
+                })
+                colony_id.player.money -= b.price_base
+
 
 class battle(models.Model):
     _name = 'expanse.battle'
     _description = 'Battles'
 
     name = fields.Char()
-    date_start = fields.Datetime(readonly=True, default = fields.Datetime.now)
+    date_start = fields.Datetime(readonly=True, default=fields.Datetime.now)
     date_end = fields.Datetime(compute='_get_time')  # Calcul de dates
     time = fields.Float(compute='_get_time')
     distance = fields.Float(compute='_get_time')
@@ -279,6 +378,8 @@ class battle(models.Model):
     spaceship1_list = fields.One2many('expanse.battle_spaceship_rel', 'battle_id')
     spaceship1_available = fields.Many2many('expanse.colony_spaceship_rel', compute='_get_spaceships_available')
     total_power = fields.Float()  # ORM Mapped
+    winner = fields.Many2one()
+    draft = fields.Boolean()
 
     @api.onchange('player1')
     def onchange_player1(self):
@@ -310,11 +411,12 @@ class battle(models.Model):
             b.time = 0
             b.distance = 0
             b.date_end = fields.Datetime.now()
-            if len(b.colony1) > 0 and len(b.colony2) > 0 and len(b.spaceship1_list) > 0:
+            if len(b.colony1) > 0 and len(b.colony2) > 0 and len(b.spaceship1_list) > 0 and len(b.spaceship1_list.spaceship_id) > 0:
                 b.distance = b.colony1.planet.distance(b.colony2.planet)
                 min_speed = b.spaceship1_list.spaceship_id.sorted(lambda s: s.speed).mapped('speed')[0]
                 b.time = b.distance / min_speed
-                b.date_end = fields.Datetime.to_string(fields.Datetime.from_string(b.date_start) + timedelta(minutes=b.time))
+                b.date_end = fields.Datetime.to_string(
+                    fields.Datetime.from_string(b.date_start) + timedelta(minutes=b.time))
 
     def launch_battle(self):
         for b in self:
@@ -324,7 +426,7 @@ class battle(models.Model):
                 b.progress = 0
                 for s in b.spaceship1_list:
                     spaceship_available = \
-                    b.spaceship1_available.filtered(lambda s_a: s_a.spaceship_id.id == s.spaceship_id.id)[0]
+                        b.spaceship1_available.filtered(lambda s_a: s_a.spaceship_id.id == s.spaceship_id.id)[0]
                     spaceship_available.qty -= s.qty
                 b.state = '2'
 
@@ -333,35 +435,37 @@ class battle(models.Model):
             if b.state == '2':
                 b.state = '1'
 
+    # In each round, all participating units(defenses+ships) randomly choose a target enemy unit.
+    #
+    # For each shooting unit:
+    #
+    #     If the Weaponry of the shooting unit is less than 1% of the Shielding of the target unit, the shot is bounced, and the target unit does not lose anything (i.e. shot is wasted).
+    #     Else, if the weaponry is lower than the Shielding, then the shield absorbs the shot, and the unit does not lose Hull Plating: S = S - W.
+    #     Else, the weaponry is sufficiently strong, i.e. W > S. Then the shield only absorbs part of the shoot and the rest is dealt to the hull: H = H - (W - S) and S = 0.
+    #     If the Hull of the target ship is less than 70% of the initial Hull (H_i) of the ship (initial of the combat), then the ship has a probability of 1 - H/H_i of exploding. If it explodes, the hull is set to zero: H = 0. (but it can still be shot by the other units on this round, because they already target it.)
+    #     Finally, if the shooting unit has rapid fire (with value r) against the target unit, it has a chance of (r-1)/r of choosing another target at random, and repeating the above steps for that new target.
 
-# In each round, all participating units(defenses+ships) randomly choose a target enemy unit.
-#
-# For each shooting unit:
-#
-#     If the Weaponry of the shooting unit is less than 1% of the Shielding of the target unit, the shot is bounced, and the target unit does not lose anything (i.e. shot is wasted).
-#     Else, if the weaponry is lower than the Shielding, then the shield absorbs the shot, and the unit does not lose Hull Plating: S = S - W.
-#     Else, the weaponry is sufficiently strong, i.e. W > S. Then the shield only absorbs part of the shoot and the rest is dealt to the hull: H = H - (W - S) and S = 0.
-#     If the Hull of the target ship is less than 70% of the initial Hull (H_i) of the ship (initial of the combat), then the ship has a probability of 1 - H/H_i of exploding. If it explodes, the hull is set to zero: H = 0. (but it can still be shot by the other units on this round, because they already target it.)
-#     Finally, if the shooting unit has rapid fire (with value r) against the target unit, it has a chance of (r-1)/r of choosing another target at random, and repeating the above steps for that new target.
-
-
+    def execute_battle(self):
+        for b in self:
+            result = b.simulate_battle()
 
     def simulate_battle(self):
-        for b in self:
-            spaceships1 = b.spaceship1_list.mapped(lambda s: [{"armor": s.spaceship_id.armor, "damage": s.spaceship_id.damage}]*s.qty)
+            b = self
+            winner = False
+            draft = False
+            spaceships1 = b.spaceship1_list.mapped(lambda s: [s.spaceship_id.read(['id','damage','armor','capacity'])] * s.qty)
             spaceships1 = [spaceship for sublist in spaceships1 for spaceship in sublist]
 
-            spaceships2 = b.colony2.spaceships.mapped(lambda s: [{"armor": s.spaceship_id.armor, "damage": s.spaceship_id.damage}] * s.qty)
+            spaceships2 = b.colony2.spaceships.mapped(lambda s: [s.spaceship_id.read(['id','damage','armor','capacity'])] * s.qty)
             spaceships2 = [spaceship for sublist in spaceships2 for spaceship in sublist]
 
-
-            for i in range(0,6): # 6 rondes com a màxim
+            for i in range(0, 6):  # 6 rondes com a màxim
                 # Attack
                 if len(spaceships1) > 0 and len(spaceships2) > 0:
-                    print(spaceships1,spaceships2)
+                    print("ROUND",i,spaceships1, spaceships2)
                     for attacker in spaceships1:
                         target = random.choice(spaceships2)
-                        if attacker['damage'] > target['armor']/100 or random.random() > 0.90:  # Bounce
+                        if attacker['damage'] > target['armor'] / 100 or random.random() > 0.90:  # Bounce
                             target['armor'] -= random.random() * attacker['damage']
 
                     # Defense
@@ -372,7 +476,14 @@ class battle(models.Model):
 
                     spaceships1 = list(filter(lambda s: s['armor'] > 0, spaceships1))
                     spaceships2 = list(filter(lambda s: s['armor'] > 0, spaceships2))
+            if len(spaceships1) == 0 and len(spaceships2) > 0:
+                winner = b.player2.id
+            if len(spaceships1) > 0 and len(spaceships2) == 0:
+                winner = b.player1.id
+            if len(spaceships1) > 0 and len(spaceships2) > 0:
+                draft = True
 
+            return {"winner": winner, "draft": draft}
 
 
 class battle_spaceship_rel(models.Model):

@@ -2,9 +2,22 @@
     <data>
            <record model="ir.cron" forcecreate="True" id="expanse.cron_produce">
             <field name="name">Game: Cron Produce</field>
-            <field name="model_id" ref="model_expanse_building"/>
+            <field name="model_id" ref="model_expanse_colony"/>
             <field name="state">code</field>
             <field name="code">model.produce()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="activity_user_type">specific</field>
+            <field name="doall" eval="False" />
+        </record>
+
+        <record model="ir.cron" forcecreate="True" id="expanse.cron_fabricate">
+            <field name="name">Game: Cron Fabricate</field>
+            <field name="model_id" ref="model_expanse_colony_spaceship_fabrication"/>
+            <field name="state">code</field>
+            <field name="code">model.update_fabrication()</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">minutes</field>

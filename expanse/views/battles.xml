@@ -38,6 +38,13 @@
                               class="btn btn-primary"
 
                       ></button>
+             <button name="simulate_battle"
+                              type="object"
+                              string="Simulation"
+                              class="btn btn-primary"
+
+                      ></button>
+
             <field name="state" widget="statusbar" />
           </header>
           <sheet><group>

@@ -46,6 +46,18 @@
             <field name="view_mode">tree,form,calendar</field>
         </record>
 
+         <record model="ir.actions.act_window" id="expanse.action_colony_spaceship_rel">
+            <field name="name">Expanse colony rel</field>
+            <field name="res_model">expanse.colony_spaceship_rel</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+             <record model="ir.actions.act_window" id="expanse.action_colony_spaceship_fabrication_rel">
+            <field name="name">Expanse colony rel fabrication</field>
+            <field name="res_model">expanse.colony_spaceship_fabrication</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
         <!-- Top menu item -->
 
         <menuitem name="Expanse" id="expanse.menu_root"/>
@@ -75,6 +87,12 @@
 
         <menuitem name="Battles" id="expanse.menu_battle_list" parent="expanse.menu_game"
                   action="expanse.action_battle_window"/>
+
+          <menuitem name="Colony Spaceship Rels" id="expanse.menu_c_s_rel_list" parent="expanse.menu_aux_models"
+                  action="expanse.action_colony_spaceship_rel"/>
+
+        <menuitem name="Colony Spaceship Fabrication" id="expanse.menu_c_s_f_rel_list" parent="expanse.menu_aux_models"
+                  action="expanse.action_colony_spaceship_fabrication_rel"/>
 
         <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.</field>
