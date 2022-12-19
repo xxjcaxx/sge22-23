@@ -1,6 +1,6 @@
 <odoo>
     <data>
-        <record id="expanse.player_demo" model="expanse.player">
+        <record id="expanse.player_demo" model="res.partner">
             <field name="name">Player Demo</field>
             <field name="avatar">/9j/4AAQSkZJRgABAQEASABIAAD/4R0WRXhpZgAASUkqAAgAAAAHABIBAwABAAAAAQAAABoBBQAB
 AAAAYgAAABsBBQABAAAAagAAACgBAwABAAAAAgAAADEBAgANAAAAcgAAADIBAgAUAAAAgAAAAGmH

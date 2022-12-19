@@ -38,10 +38,11 @@ class config(models.TransientModel):
 
 
 class player(models.Model):
-    _name = 'expanse.player'
+    _name = 'res.partner'
+    _inherit = 'res.partner'
     _description = 'Players of the game'
 
-    name = fields.Char(required=True, string="Player Name")
+    #name = fields.Char(required=True, string="Player Name")
     password = fields.Char()
     avatar = fields.Image(max_width=200, max_height=200)
     avatar_tumb = fields.Image(related="avatar", max_width=50, max_height=50)
@@ -99,7 +100,7 @@ class colony(models.Model):
 
     name = fields.Char(required=True)
     planet = fields.Many2one('expanse.planet', ondelete="cascade", required=True)
-    player = fields.Many2one('expanse.player', ondelete="cascade")
+    player = fields.Many2one('res.partner', ondelete="cascade")
     player_avatar = fields.Image(related="player.avatar", string="Player Avatar")
     money = fields.Float(related="player.money")
 
@@ -371,8 +372,8 @@ class battle(models.Model):
     distance = fields.Float(compute='_get_time')
     progress = fields.Float()
     state = fields.Selection([('1', 'Preparation'), ('2', 'Launched'), ('3', 'Finished')], default='1')
-    player1 = fields.Many2one('expanse.player')
-    player2 = fields.Many2one('expanse.player')
+    player1 = fields.Many2one('res.partner')
+    player2 = fields.Many2one('res.partner')
     colony1 = fields.Many2one('expanse.colony')
     colony2 = fields.Many2one('expanse.colony')
     spaceship1_list = fields.One2many('expanse.battle_spaceship_rel', 'battle_id')

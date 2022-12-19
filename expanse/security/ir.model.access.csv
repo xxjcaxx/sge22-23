@@ -1,5 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_expanse_player,expanse.player,model_expanse_player,base.group_user,1,1,1,1
 access_expanse_planet,expanse.planet,model_expanse_planet,base.group_user,1,1,1,1
 access_expanse_colony,expanse.colony,model_expanse_colony,base.group_user,1,1,1,1
 access_expanse_spaceship,expanse.spaceship,model_expanse_spaceship,base.group_user,1,1,1,1

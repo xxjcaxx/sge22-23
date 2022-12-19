@@ -6,7 +6,7 @@
 
         <record model="ir.actions.act_window" id="expanse.action_player_window">
             <field name="name">Expanse Players</field>
-            <field name="res_model">expanse.player</field>
+            <field name="res_model">res.partner</field>
             <field name="view_mode">tree,form</field>
         </record>
         <record model="ir.actions.act_window" id="expanse.action_planet_window">
