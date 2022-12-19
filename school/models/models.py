@@ -27,3 +27,11 @@ class course(models.Model):
                             relation='course_students_repeaters_rel', # (opcional) el nom del la taula en mig
                             column1='course_id', # (opcional) el nom en la taula en mig de la columna d'aquest model
                             column2='student_id')  # (opcional) el nom de la columna de l'altre model.
+
+class teacher(models.Model):
+    _name = 'res.partner'
+    _description = 'The teachers'
+    _inherit = 'res.partner'
+    #name = fields.Char(string="Nombre",required=True)
+    year = fields.Integer()
+    topic_id = fields.Many2many("school.topic")
