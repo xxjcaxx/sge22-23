@@ -8,7 +8,14 @@
             <field name="name">Expanse Players</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain"></field>
+            <field name="search_view_id" ref="expanse.player_search"></field>
+            <field name="context">{'search_default_player_partner': 1, 'default_is_player': True, }</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('expanse.player_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('expanse.player_form')}),]" />
         </record>
+
         <record model="ir.actions.act_window" id="expanse.action_planet_window">
             <field name="name">Expanse Planets</field>
             <field name="res_model">expanse.planet</field>

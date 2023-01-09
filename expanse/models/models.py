@@ -50,6 +50,7 @@ class player(models.Model):
     colonies_qty = fields.Integer(compute="get_colonies_qty")
     spaceships = fields.Many2many('expanse.colony_spaceship_rel', compute='_get_spaceships')
     money = fields.Float()
+    is_player = fields.Boolean(default=False)
 
     @api.depends('colonies')
     def get_colonies_qty(self):
@@ -100,7 +101,7 @@ class colony(models.Model):
 
     name = fields.Char(required=True)
     planet = fields.Many2one('expanse.planet', ondelete="cascade", required=True)
-    player = fields.Many2one('res.partner', ondelete="cascade")
+    player = fields.Many2one('res.partner', domain="[('is_player','=',True)]", ondelete="cascade")
     player_avatar = fields.Image(related="player.avatar", string="Player Avatar")
     money = fields.Float(related="player.money")
 
