@@ -515,9 +515,16 @@ class player_wizard(models.TransientModel):
     def _default_client(self):
         return self.env['res.partner'].browse(self._context.get('active_id'))  # El context conté, entre altre coses,
         # el active_id del model que està obert.
-    name = fields.Many2one('res.partner',default=_default_client)
+    name = fields.Many2one('res.partner',default=_default_client, required=True)
     password = fields.Char()
     avatar = fields.Image(max_width=200, max_height=200)
+
+    @api.model
+    def default_get(self, default_fields):
+        result = super(player_wizard, self).default_get(default_fields)
+        result['avatar'] =self.env.ref('expanse.template_player_placeholder').image
+        return result
+
 
     def create_player(self):
         self.ensure_one()

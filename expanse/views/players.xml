@@ -8,7 +8,7 @@
                 <form>
 
                         <group>
-                            <field name="avatar" widget="image"/>
+                            <field name="avatar" widget="image"  class="oe_avatar"/>
                             <field name="name"/>
                             <field name="password" password="True"/>
                         </group>
@@ -54,7 +54,7 @@
                 <notebook position="inside">
                     <page string="Expanse">
                         <group>
-                            <field name="avatar" widget="image"/>
+                            <field name="avatar" widget="image"  class="oe_avatar"/>
                             <field name="password" password="True"/>
                              <button name="%(expanse.player_wizard_action)d" type="action" string="Create Player" class="oe_highlight" />
                             <field name="is_player"/>
@@ -92,7 +92,7 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="avatar" widget="image"/>
+                            <field name="avatar" widget="image"  class="oe_avatar"/>
                             <field name="name"/>
                             <field name="password" password="True"/>
                             <field name="is_player"/>
