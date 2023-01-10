@@ -1,6 +1,36 @@
 <odoo>
     <data>
         <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="expanse.player_wizard_form">
+            <field name="name">expanse player wizard</field>
+            <field name="model">expanse.player_wizard</field>
+            <field name="arch" type="xml">
+                <form>
+
+                        <group>
+                            <field name="avatar" widget="image"/>
+                            <field name="name"/>
+                            <field name="password" password="True"/>
+                        </group>
+
+                     <footer>
+                        <button name="create_player" type="object"
+                                string="Create" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="expanse.player_wizard_action" model="ir.actions.act_window">
+            <field name="name">Create Player</field>
+            <field name="res_model">expanse.player_wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
+        </record>
+
 
         <record model="ir.ui.view" id="expanse.player_tree">
             <field name="name">expanse list</field>
@@ -26,6 +56,7 @@
                         <group>
                             <field name="avatar" widget="image"/>
                             <field name="password" password="True"/>
+                             <button name="%(expanse.player_wizard_action)d" type="action" string="Create Player" class="oe_highlight" />
                             <field name="is_player"/>
                             <field name="money"/>
                         </group>
@@ -96,6 +127,9 @@
                 </form>
             </field>
         </record>
+
+
+
 
         <record model="ir.ui.view" id="expanse.player_search">
             <field name="name">expanse search</field>

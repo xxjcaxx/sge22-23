@@ -502,6 +502,26 @@ class template(models.Model):
     _name = 'expanse.template'
     _description = 'Templates'
 
+
     name = fields.Char()
     image = fields.Image(max_width=200, max_height=200)
     type = fields.Selection([('1', 'spaceships'), ('2', 'planets')])
+
+
+class player_wizard(models.TransientModel):
+    _name = 'expanse.player_wizard'
+    _description = 'Wizard per crear players'
+
+    def _default_client(self):
+        return self.env['res.partner'].browse(self._context.get('active_id'))  # El context conté, entre altre coses,
+        # el active_id del model que està obert.
+    name = fields.Many2one('res.partner',default=_default_client)
+    password = fields.Char()
+    avatar = fields.Image(max_width=200, max_height=200)
+
+    def create_player(self):
+        self.ensure_one()
+        self.name.write({'password': self.password,
+                         'avatar': self.avatar,
+                         'is_player': True
+                         })
