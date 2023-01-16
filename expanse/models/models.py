@@ -62,6 +62,19 @@ class player(models.Model):
         for p in self:
             p.spaceships = p.colonies.spaceships
 
+    def launch_player_wizard(self):
+      #  return self.env.ref('expanse.player_wizard_action').read()
+        return {
+            'name': 'Create Player',
+            'type': 'ir.actions.act_window',
+            'res_model': 'expanse.player_wizard',
+            'view_mode': 'form',
+            'target': 'new'
+        }
+
+    def launch_battle_wizard(self):
+        return self.env.ref('expanse.battle_wizard_action').read()[0]
+
 
 class planet(models.Model):
     _name = 'expanse.planet'
@@ -532,3 +545,88 @@ class player_wizard(models.TransientModel):
                          'avatar': self.avatar,
                          'is_player': True
                          })
+
+
+class battle_wizard(models.TransientModel):
+    _name = 'expanse.battle_wizard'
+    _description = 'Battle wizard'
+
+    name = fields.Char()
+    date_start = fields.Datetime(readonly=True, default=fields.Datetime.now)
+    date_end = fields.Datetime(compute='_get_time')  # Calcul de dates
+    time = fields.Float(compute='_get_time')
+    distance = fields.Float(compute='_get_time')
+    state = fields.Selection([('1', 'Player1'), ('2', 'Player2'), ('3', 'Resume')], default='1')
+    player1 = fields.Many2one('res.partner')
+    player2 = fields.Many2one('res.partner')
+    colony1 = fields.Many2one('expanse.colony')
+    colony2 = fields.Many2one('expanse.colony')
+    spaceship1_list = fields.One2many('expanse.battle_spaceship_rel', 'battle_id')
+    spaceship1_available = fields.Many2many('expanse.colony_spaceship_rel', compute='_get_spaceships_available')
+    total_power = fields.Float()  # ORM Mapped
+
+    @api.onchange('player1')
+    def onchange_player1(self):
+        self.name = self.player1.name
+        return {
+            'domain': {
+                'colony1': [('id', 'in', self.player1.colonies.ids)],
+                'player2': [('id', '!=', self.player1.id)],
+            }
+        }
+
+    @api.onchange('player2')
+    def onchange_player2(self):
+        return {
+            'domain': {
+                'colony2': [('id', 'in', self.player2.colonies.ids)],
+                'player1': [('id', '!=', self.player2.id)],
+            }
+        }
+
+    @api.depends('colony1')
+    def _get_spaceships_available(self):
+        for b in self:
+            b.spaceship1_available = b.colony1.spaceships.ids
+
+    @api.depends('spaceship1_list', 'colony2', 'colony1')
+    def _get_time(self):
+        for b in self:
+            b.time = 0
+            b.distance = 0
+            b.date_end = fields.Datetime.now()
+            if len(b.colony1) > 0 and len(b.colony2) > 0 and len(b.spaceship1_list) > 0 and len(
+                    b.spaceship1_list.spaceship_id) > 0:
+                b.distance = b.colony1.planet.distance(b.colony2.planet)
+                min_speed = b.spaceship1_list.spaceship_id.sorted(lambda s: s.speed).mapped('speed')[0]
+                b.time = b.distance / min_speed
+                b.date_end = fields.Datetime.to_string(
+                    fields.Datetime.from_string(b.date_start) + timedelta(minutes=b.time))
+
+    def  action_previous(self):
+        if self.state == '2':
+            self.state = '1'
+        elif self.state == '3':
+            self.state = '2'
+        return {
+            'name': 'Create Battle',
+            'type': 'ir.actions.act_window',
+            'res_model': 'expanse.battle_wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': self.id
+        }
+
+    def action_next(self):
+        if self.state == '1':
+            self.state = '2'
+        elif self.state == '2':
+            self.state = '3'
+        return {
+            'name': 'Create Battle',
+            'type': 'ir.actions.act_window',
+            'res_model': 'expanse.battle_wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': self.id
+        }

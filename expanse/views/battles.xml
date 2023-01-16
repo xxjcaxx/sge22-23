@@ -26,24 +26,24 @@
       <field name="arch" type="xml">
         <form >
           <header>
-             <button name="launch_battle"
-                              type="object"
-                              string="Launch Battle"
-                              class="btn btn-primary"
+            <button name="launch_battle"
+                    type="object"
+                    string="Launch Battle"
+                    class="btn btn-primary"
 
-                      ></button>
-               <button name="back"
-                              type="object"
-                              string="Back"
-                              class="btn btn-primary"
+            ></button>
+            <button name="back"
+                    type="object"
+                    string="Back"
+                    class="btn btn-primary"
 
-                      ></button>
-             <button name="simulate_battle"
-                              type="object"
-                              string="Simulation"
-                              class="btn btn-primary"
+            ></button>
+            <button name="simulate_battle"
+                    type="object"
+                    string="Simulation"
+                    class="btn btn-primary"
 
-                      ></button>
+            ></button>
 
             <field name="state" widget="statusbar" />
           </header>
@@ -52,8 +52,8 @@
               <field name="name"/>
               <field name="date_start"/>
               <field name="date_end"/>
-                 <field name="distance"/>
-          <field name="time"/>
+              <field name="distance"/>
+              <field name="time"/>
               <field name="progress" widget="progressbar"/>
             </group>
             <group>
@@ -111,6 +111,77 @@
           <field name="player2"/>
         </calendar>
       </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="expanse.battle_wizard_form">
+      <field name="name">expanse form</field>
+      <field name="model">expanse.battle_wizard</field>
+      <field name="arch" type="xml">
+        <form >
+          <header>
+            <button name="action_previous" type="object"
+                                string="Previous"
+                                states="2,3"/>
+            <button name="action_next" type="object"
+                                string="Next" states="1,2"
+                                class="oe_highlight"/>
+            <field name="state" widget="statusbar" />
+          </header>
+          <sheet>
+
+            <group states="1">
+              <field name="name"/>
+              <field name="date_start"/>
+              <field name="player1"/>
+              <field name="colony1"/>
+            </group>
+
+            <group states="2">
+              <field name="player2"/>
+              <field name="colony2"/>
+              <field name="date_end"/>
+              <field name="distance"/>
+              <field name="time"/>
+            </group>
+
+                <group states="1">
+                  <field name="spaceship1_list">
+                    <tree>
+                      <field name="name"/>
+                      <field name="qty"/>
+                    </tree>
+                  </field>
+                  <field name="spaceship1_available">
+                    <tree>
+                      <field name="name"/>
+                      <field name="qty"/>
+                      <field name="fabrications"/>
+                      <field name="fabrications_queue"/>
+                      <button name="add_to_battle"
+                              type="object"
+                              string="Add"
+                              class="btn btn-primary"
+                              context="{'ctx_battle':parent.id}"
+                      ></button>
+                    </tree>
+                  </field>
+                </group>
+
+
+          </sheet>
+
+
+        </form>
+      </field>
+    </record>
+
+
+    <record id="expanse.battle_wizard_action" model="ir.actions.act_window">
+      <field name="name">Create battle</field>
+      <field name="res_model">expanse.battle_wizard</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
     </record>
 
 
