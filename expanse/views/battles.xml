@@ -133,17 +133,23 @@
             <group states="1">
               <field name="name"/>
               <field name="date_start"/>
-              <field name="player1"/>
+              <field name="player1"
+                     domain="[('is_player','=',True)]"
+              />
               <field name="colony1"/>
             </group>
 
             <group states="2">
-              <field name="player2"/>
+              <field name="player2"
+                     domain = "[('id','!=',context.get('player1_context',[])),('is_player','=',True)]"
+              />
               <field name="colony2"/>
               <field name="date_end"/>
               <field name="distance"/>
               <field name="time"/>
             </group>
+
+
 
                 <group states="1">
                   <field name="spaceship1_list">
@@ -158,7 +164,7 @@
                       <field name="qty"/>
                       <field name="fabrications"/>
                       <field name="fabrications_queue"/>
-                      <button name="add_to_battle"
+                      <button name="add_to_battle_wizard"
                               type="object"
                               string="Add"
                               class="btn btn-primary"
@@ -168,9 +174,19 @@
                   </field>
                 </group>
 
+            <group states="3">
+               <field name="player1_resume"></field>
+               <field name="player2_resume"></field>
+            </group>
+
 
           </sheet>
+<footer >
 
+      <button states="3" name="create_battle" type="object"
+                                string="Create" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
+</footer>
 
         </form>
       </field>

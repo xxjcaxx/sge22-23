@@ -1,6 +1,7 @@
 from odoo import fields, models, api
 
 
+
 class battle(models.Model):
     _name = 'expanse.battle'
     _description = 'Battles'
@@ -136,10 +137,21 @@ class battle_spaceship_rel(models.Model):
     battle_id = fields.Many2one('expanse.battle')
     qty = fields.Integer()
 
+class battle_spaceship_rel_wizard(models.TransientModel):
+    _name = 'expanse.battle_spaceship_rel_wizard'
+    _description = 'battle_spaceship_rel_wizard'
+
+    name = fields.Char(related="spaceship_id.name")
+    spaceship_id = fields.Many2one('expanse.spaceship')
+    battle_id = fields.Many2one('expanse.battle_wizard')
+    qty = fields.Integer()
 
 class battle_wizard(models.TransientModel):
     _name = 'expanse.battle_wizard'
     _description = 'Battle wizard'
+
+    def _default_player1(self):
+        return self.env['res.partner'].browse(self._context.get('active_id'))  # El context conté, entre altre coses,
 
     name = fields.Char()
     date_start = fields.Datetime(readonly=True, default=fields.Datetime.now)
@@ -147,11 +159,13 @@ class battle_wizard(models.TransientModel):
     time = fields.Float(compute='_get_time')
     distance = fields.Float(compute='_get_time')
     state = fields.Selection([('1', 'Player1'), ('2', 'Player2'), ('3', 'Resume')], default='1')
-    player1 = fields.Many2one('res.partner')
+    player1 = fields.Many2one('res.partner', default=_default_player1)
+    player1_resume = fields.Many2one('res.partner', related='player1')
     player2 = fields.Many2one('res.partner')
+    player2_resume = fields.Many2one('res.partner', related='player2')
     colony1 = fields.Many2one('expanse.colony')
     colony2 = fields.Many2one('expanse.colony')
-    spaceship1_list = fields.One2many('expanse.battle_spaceship_rel', 'battle_id')
+    spaceship1_list = fields.One2many('expanse.battle_spaceship_rel_wizard', 'battle_id')
     spaceship1_available = fields.Many2many('expanse.colony_spaceship_rel', compute='_get_spaceships_available')
     total_power = fields.Float()  # ORM Mapped
 
@@ -211,12 +225,51 @@ class battle_wizard(models.TransientModel):
         if self.state == '1':
             self.state = '2'
         elif self.state == '2':
-            self.state = '3'
+            if len(self.player2) < 1:
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'message': 'Player2 has to be choosed',
+                        'type': 'danger',  # types: success,warning,danger,info
+                        'sticky': False,
+                    }
+                }
+            else:
+                self.state = '3'
         return {
             'name': 'Create Battle',
             'type': 'ir.actions.act_window',
             'res_model': 'expanse.battle_wizard',
             'view_mode': 'form',
             'target': 'new',
-            'res_id': self.id
+            'res_id': self.id,
+            'context': dict(self._context, player1_context=self.player1.id),
+
+        }
+
+    def create_battle(self):
+        new_battle = self.env['expanse.battle'].create({
+            'name': self.name,
+            'player1': self.player1.id,
+            'player2': self.player2.id,
+            'colony1': self.colony1.id,
+            'colony2': self.colony2.id,
+            'state': '1',
+            'date_start': self.date_start,
+        })
+        for s in self.spaceship1_list:
+            self.env['expanse.battle_spaceship_rel'].create({
+            'spaceship_id' : s.spaceship_id.id,
+            'battle_id' : new_battle.id,
+            'qty' : s.qty,
+            })
+        return  {
+            'name': 'Created Battle',
+            'type': 'ir.actions.act_window',
+            'res_model': 'expanse.battle',
+            'view_mode': 'form',
+            'target': 'current',
+            'res_id': new_battle.id,
+
         }

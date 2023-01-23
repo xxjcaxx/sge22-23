@@ -259,7 +259,29 @@ class colony_spaceship_rel(models.Model):
                 if current_spaceships.qty < c.qty:
                     current_spaceships.qty += 1
                 # c.qty -= 1
-
+    def add_to_battle_wizard(self):
+        for c in self:
+            if (c.qty > 0):
+                battle_id = self.env['expanse.battle_wizard'].browse(self.env.context['ctx_battle'])[0]
+                current_spaceships = battle_id.spaceship1_list.filtered(
+                    lambda s: s.spaceship_id.id == c.spaceship_id.id)
+                if len(current_spaceships) == 0:
+                    current_spaceships = self.env['expanse.battle_spaceship_rel_wizard'].create({
+                        "spaceship_id": c.spaceship_id.id,
+                        "battle_id": battle_id.id,
+                        "qty": 0
+                    })
+                if current_spaceships.qty < c.qty:
+                    current_spaceships.qty += 1
+                # c.qty -= 1
+        return {
+            'name': 'Create Battle',
+            'type': 'ir.actions.act_window',
+            'res_model': 'expanse.battle_wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': battle_id.id
+        }
 
 class colony_spaceship_fabrication(models.Model):
     _name = 'expanse.colony_spaceship_fabrication'

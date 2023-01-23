@@ -56,8 +56,11 @@
                         <group>
                             <field name="avatar" widget="image"  class="oe_avatar"/>
                             <field name="password" password="True"/>
-                             <button name="%(expanse.player_wizard_action)d" type="action" string="Create Player" class="oe_highlight" />
-                            <button name="launch_player_wizard" type="object" string="Create Player python" class="oe_highlight" />
+                             <button name="%(expanse.player_wizard_action)d"
+                                     type="action" string="Create Player" class="oe_highlight" />
+                            <button name="launch_player_wizard"
+                                    type="object" string="Create Player python"
+                                    class="oe_highlight" />
                             <field name="is_player"/>
                             <field name="money"/>
                         </group>
@@ -125,7 +128,9 @@
                             </page>
                             <page string="Battles">
                                 <group>
-                                      <button name="launch_battle_wizard" type="object" string="Create new Battle" class="oe_highlight" />
+                                      <button name="launch_battle_wizard"
+                                              type="object" string="Create new Battle"
+                                              class="oe_highlight" />
                                 </group>
                             </page>
                         </notebook>
